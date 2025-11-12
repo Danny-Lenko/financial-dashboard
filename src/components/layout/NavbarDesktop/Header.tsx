@@ -13,9 +13,10 @@ const HeaderInner = styled('header')(({ theme }) => ({
   marginLeft: 'auto',
   marginRight: 'auto',
   display: 'flex',
+  alignItems: 'center',
 }));
 
-export function Header({ children }: { children: React.ReactNode }) {
+export default function Header({ children }: { children: React.ReactNode }) {
   return (
     <HeaderWrapper>
       <HeaderInner>{children}</HeaderInner>
