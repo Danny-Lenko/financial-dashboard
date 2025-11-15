@@ -13,6 +13,7 @@ const HeaderInner = styled('header')(({ theme }) => ({
   marginLeft: 'auto',
   marginRight: 'auto',
   display: 'flex',
+  justifyContent: 'space-between',
   alignItems: 'center',
 }));
 

@@ -1,16 +1,19 @@
 import { Link } from '@mui/material';
 
+import logoUrl from '@assets/logo.svg';
 import Header from './Header';
-import logo from '@assets/logo.svg';
+import Navigation from './Navigation';
+import MenuStack from './MenuStack';
 
 function NavbarDesktop() {
   return (
     <>
       <Header>
         <Link href="/">
-          <img style={{ display: 'block' }} src={logo} alt="Financy logo" />
+          <img style={{ display: 'block' }} src={logoUrl} alt="Financy logo" />
         </Link>
-        <nav>Header Content</nav>
+        <Navigation />
+        <MenuStack />
       </Header>
     </>
   );
