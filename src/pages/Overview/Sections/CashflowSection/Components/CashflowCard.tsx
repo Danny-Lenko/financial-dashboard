@@ -1,7 +1,16 @@
-import { Typography } from '@mui/material';
+import { Box, Stack, Typography } from '@mui/material';
+import { styled } from '@mui/system';
 
-import { CASHFLOW_CATEGORY_TITLES } from '@/constants/cashflow.constants';
+import { CASHFLOW_CATEGORY_CONFIG } from '@/constants/cashflow.constants';
 import type { CashflowCategory } from '@/types/cashflow.types';
+import { formatCurrency } from '@/utils/cashflow.utils';
+import TrendChip from '@/components/common/TrendChip/TrendChip';
+
+const Card = styled(Box)(({ theme }) => ({
+  border: `1px solid ${theme.palette.divider}`,
+  padding: theme.spacing(2, 3),
+  borderRadius: theme.shape.borderRadius,
+}));
 
 function BalanceCard({
   category,
@@ -12,12 +21,25 @@ function BalanceCard({
   amount: number;
   trend: number;
 }) {
+  const { title, amountColor } = CASHFLOW_CATEGORY_CONFIG[category];
+  const h2Content = formatCurrency(amount);
+
   return (
-    <>
-      <Typography variant="h3">{CASHFLOW_CATEGORY_TITLES[category]}</Typography>
-      <Typography>Amount: {amount.toFixed(2)}</Typography>
-      <Typography>Trend: {trend.toFixed(1)}%</Typography>
-    </>
+    <Card>
+      <Typography color="text.secondary" gutterBottom>
+        {title}
+      </Typography>
+      <Stack
+        direction="row"
+        alignItems="baseline"
+        justifyContent="space-between"
+      >
+        <Typography variant="h2" color={amountColor}>
+          {h2Content}
+        </Typography>
+        <TrendChip trend={trend} />
+      </Stack>
+    </Card>
   );
 }
 
