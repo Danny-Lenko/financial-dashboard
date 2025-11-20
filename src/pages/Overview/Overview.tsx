@@ -1,3 +1,4 @@
+import AddRecordingSection from './Sections/AddRecordingSection/AddRecordingSection';
 import CashflowSection from './Sections/CashflowSection/CashflowSection';
 import HelloSection from './Sections/HelloSection/HelloSection';
 
@@ -6,6 +7,7 @@ function Overview() {
     <>
       <HelloSection />
       <CashflowSection />
+      <AddRecordingSection />
     </>
   );
 }

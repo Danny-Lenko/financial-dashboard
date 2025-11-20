@@ -22,3 +22,12 @@ export interface CashflowAnalysis {
   incomes: CashflowMetrics;
   expenses: CashflowMetrics;
 }
+
+export const AddRecordingButton = {
+  Income: 'income',
+  Expense: 'expense',
+  Transfer: 'transfer',
+} as const;
+
+export type AddRecordingButton =
+  (typeof AddRecordingButton)[keyof typeof AddRecordingButton];
