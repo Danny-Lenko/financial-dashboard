@@ -1,14 +1,7 @@
+import { getNavigationRoutes } from '@/utils/routers.utils';
 import { Button, type ButtonProps } from '@mui/material';
 import { styled } from '@mui/system';
 import { NavLink } from 'react-router-dom';
-
-const navigationRoutes = [
-  { name: 'Overview', path: '/' },
-  { name: 'Transactions', path: '/transactions' },
-  { name: 'Categories', path: '/categories' },
-  { name: 'Accounts', path: '/accounts', disabled: true },
-  { name: 'Wallets', path: '/wallets', disabled: true },
-];
 
 const UnorderedList = styled('ul')(({ theme }) => ({
   listStyle: 'none',
@@ -34,18 +27,22 @@ const NavigationLink = styled(Button)<NavigationLinkProps>(({ theme }) => ({
 }));
 
 function Navigation() {
+  const routes = getNavigationRoutes();
+
+  console.log('Navigation Routes:', routes);
+
   return (
     <nav>
       <UnorderedList>
-        {navigationRoutes.map((route) => (
-          <li key={route.name}>
+        {routes.map((route) => (
+          <li key={route.navigationLabel}>
             <NavigationLink
               disabled={route.disabled}
               component={NavLink}
-              to={route.path}
+              to={route.path ?? '#'}
               size="large"
             >
-              {route.name}
+              {route.navigationLabel}
             </NavigationLink>
           </li>
         ))}

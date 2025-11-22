@@ -37,7 +37,8 @@
       "@types/*": ["src/types/*"],
       "@assets/*": ["src/assets/*"],
       "@mocks/*": ["src/mocks/*"],
-      "@constants/*": ["src/constants/*"]
+      "@constants/*": ["src/constants/*"],
+      "@config/*": ["src/config/*"]
     }
   },
   "include": ["src"]
