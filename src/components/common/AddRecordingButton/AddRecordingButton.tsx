@@ -28,7 +28,7 @@ function AddCashflowRecordingButton({
   const Icon = config.icon;
 
   return (
-    <ButtonStyled variant="outlined" fullWidth>
+    <ButtonStyled variant="outlined" sx={{ boxShadow: 1 }} fullWidth>
       <Icon />
       <Stack justifyContent="start" alignItems="flex-start">
         <Typography variant="subtitle1" color="text.primary" fontWeight={600}>

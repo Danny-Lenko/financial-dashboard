@@ -1,5 +1,4 @@
 import { CashflowCategory, AddRecordingButton } from '@/types/cashflow.types';
-
 import AddIncomeSvg from '@assets/add_income.svg?react';
 import AddExpenseSvg from '@assets/add_expense.svg?react';
 import TransferMoneySvg from '@assets/transfer_money.svg?react';
