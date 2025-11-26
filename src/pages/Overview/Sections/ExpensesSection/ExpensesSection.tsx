@@ -3,6 +3,7 @@ import { styled } from '@mui/system';
 
 import { EXPENSES_CONFIG } from '@/constants/expenses.constants';
 import { thisMonthExpensesMock } from '@/mocks/expenses.mocks';
+import PieChart from './components/PieChart';
 
 const Card = styled(Paper)(({ theme }) => ({
   border: `1px solid ${theme.palette.divider}`,
@@ -17,6 +18,9 @@ function ExpensesSection() {
         <Typography variant="subtitle1" color="text.primary" fontWeight={600}>
           Expenses by category
         </Typography>
+
+        <PieChart />
+
         {EXPENSES_CONFIG.map((expense) => {
           const { percentage } = thisMonthExpensesMock.categories.find(
             (expenseData) => expenseData.name === expense.name

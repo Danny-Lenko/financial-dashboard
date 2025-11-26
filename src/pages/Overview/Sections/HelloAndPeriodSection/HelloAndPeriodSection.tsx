@@ -9,7 +9,7 @@ const Section = styled('section')({
   alignItems: 'center',
 });
 
-function HelloSection() {
+function HelloAndPeriodSection() {
   return (
     <Section>
       <Typography variant="h1">Hello, Mark!</Typography>
@@ -18,4 +18,4 @@ function HelloSection() {
   );
 }
 
-export default HelloSection;
+export default HelloAndPeriodSection;
