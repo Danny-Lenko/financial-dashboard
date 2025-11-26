@@ -1,7 +1,7 @@
 import { Typography } from '@mui/material';
 import { styled } from '@mui/system';
 
-import PeriodButtonsStack from './Components/PeriodButtonsStack';
+import PeriodButtonsStack from './components/PeriodButtonsStack';
 
 const Section = styled('section')({
   display: 'flex',

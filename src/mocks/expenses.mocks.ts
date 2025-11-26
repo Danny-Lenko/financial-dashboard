@@ -1,6 +1,6 @@
 import type { ExpensesByPeriodData } from '@/types/expenses.types';
 
-export const expensesByCategoryMock: ExpensesByPeriodData = {
+export const thisMonthExpensesMock: ExpensesByPeriodData = {
   total: 3945.55,
   period: 'March 2024',
   categories: [

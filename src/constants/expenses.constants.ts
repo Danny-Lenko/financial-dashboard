@@ -1,5 +1,5 @@
 import { ExpenseCategory } from '@/types/expenses.types';
-import HomeSvg from '@assets/expenses/home.svg?react';
+import HouseSvg from '@assets/expenses/house.svg?react';
 import ChargesSvg from '@assets/expenses/charges.svg?react';
 import TransportationSvg from '@assets/expenses/transportation.svg?react';
 import GroceriesSvg from '@assets/expenses/groceries.svg?react';
@@ -16,7 +16,7 @@ export const EXPENSES_CONFIG: ExpenseConfig[] = [
   {
     name: ExpenseCategory.House,
     color: 'secondary.main',
-    icon: HomeSvg,
+    icon: HouseSvg,
   },
   {
     name: ExpenseCategory.Charges,

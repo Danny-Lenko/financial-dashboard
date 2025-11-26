@@ -3,7 +3,7 @@ import { styled } from '@mui/system';
 import useCashflowAnalysis from '@/hooks/useCashflowAnalysis';
 import { lastMonthCashflow, thisMonthCashflow } from '@/mocks/cashflow.mocks';
 import { CASHFLOW_CATEGORY_ORDER } from '@/constants/cashflow.constants';
-import BalanceCard from './Components/CashflowCard';
+import BalanceCard from './components/CashflowCard';
 
 const Section = styled('section')(({ theme }) => ({
   marginTop: theme.spacing(4),
