@@ -15,8 +15,6 @@ export interface Expense {
   name: ExpenseCategory;
   amount: number;
   percentage: number;
-  //   color?: string;
-  //   icon?: string;
 }
 
 export interface ExpensesByPeriodData {
