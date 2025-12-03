@@ -1,21 +1,15 @@
-import { Paper, Stack, Typography } from '@mui/material';
-import { styled } from '@mui/system';
+import { Stack, Typography } from '@mui/material';
 
 import { EXPENSES_CONFIG } from '@/constants/expenses.constants';
 import { thisMonthExpensesMock } from '@/mocks/expenses.mocks';
 import PieChart from './components/PieChart';
-
-const Card = styled(Paper)(({ theme }) => ({
-  border: `1px solid ${theme.palette.divider}`,
-  padding: theme.spacing(2, 2),
-  borderRadius: theme.shape.borderRadius,
-}));
+import Paper from '@/components/common/Paper/Paper';
 
 function ExpensesSection() {
   return (
     <section>
-      <Card elevation={1}>
-        <Typography variant="subtitle1" color="text.primary" fontWeight={600}>
+      <Paper elevation={1}>
+        <Typography variant="subtitle1" color="text.secondary" fontWeight={600}>
           Expenses by category
         </Typography>
 
@@ -55,7 +49,7 @@ function ExpensesSection() {
             </Stack>
           );
         })}
-      </Card>
+      </Paper>
     </section>
   );
 }

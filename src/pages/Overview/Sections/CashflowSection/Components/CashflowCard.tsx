@@ -1,16 +1,10 @@
-import { Paper, Stack, Typography } from '@mui/material';
-import { styled } from '@mui/system';
+import { Stack, Typography } from '@mui/material';
 
 import { CASHFLOW_CATEGORY_CONFIG } from '@/constants/cashflow.constants';
 import type { CashflowCategory } from '@/types/cashflow.types';
 import { formatCurrency } from '@/utils/cashflow.utils';
 import TrendChip from '@/components/common/TrendChip/TrendChip';
-
-const Card = styled(Paper)(({ theme }) => ({
-  border: `1px solid ${theme.palette.divider}`,
-  padding: theme.spacing(2, 3),
-  borderRadius: theme.shape.borderRadius,
-}));
+import Paper from '@/components/common/Paper/Paper';
 
 function BalanceCard({
   category,
@@ -25,7 +19,7 @@ function BalanceCard({
   const h2Content = formatCurrency(amount);
 
   return (
-    <Card elevation={1}>
+    <Paper paddingX={3} elevation={1}>
       <Typography color="text.secondary" gutterBottom>
         {title}
       </Typography>
@@ -39,7 +33,7 @@ function BalanceCard({
         </Typography>
         <TrendChip trend={trend} />
       </Stack>
-    </Card>
+    </Paper>
   );
 }
 
