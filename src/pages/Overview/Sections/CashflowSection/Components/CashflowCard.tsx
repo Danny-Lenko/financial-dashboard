@@ -19,7 +19,7 @@ function BalanceCard({
   const h2Content = formatCurrency(amount);
 
   return (
-    <Paper paddingX={3} elevation={1}>
+    <Paper padding={[2, 3]} elevation={1}>
       <Typography color="text.secondary" gutterBottom>
         {title}
       </Typography>

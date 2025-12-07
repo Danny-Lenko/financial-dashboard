@@ -2,16 +2,24 @@ import { styled } from '@mui/system';
 import { Paper as MuiPaper } from '@mui/material';
 
 interface CardProps {
-  paddingX?: number;
-  paddingY?: number;
+  padding?: number | number[];
 }
 
-const Paper = styled(MuiPaper)<CardProps>(
-  ({ theme, paddingX = 2, paddingY = 2 }) => ({
+const Paper = styled(MuiPaper, {
+  shouldForwardProp: (prop) => prop !== 'paddingX' && prop !== 'paddingY',
+})<CardProps>(({ theme, padding = 2 }) => {
+  const getPadding = () => {
+    if (Array.isArray(padding)) {
+      return padding.map((p) => `${theme.spacing(p)}`).join(' ');
+    }
+    return theme.spacing(padding);
+  };
+
+  return {
     border: `1px solid ${theme.palette.divider}`,
-    padding: theme.spacing(paddingY, paddingX),
+    padding: getPadding(),
     borderRadius: theme.shape.borderRadius,
-  })
-);
+  };
+});
 
 export default Paper;

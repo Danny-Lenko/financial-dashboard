@@ -1,12 +1,24 @@
-import { Card, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
+
+import Paper from '@/components/common/Paper/Paper';
+import LastTransactionsTable from './components/LastTransactionsTable';
+
+// TODO:
+// 1. change formatting in constants to use Intl.NumberFormat for currency formatting
 
 function LastTransactionSection() {
   return (
-    <Card elevation={1}>
+    <Paper padding={[2, 2, 0]} elevation={1}>
       <Typography variant="subtitle1" fontSize="1.125rem" fontWeight={600}>
-        Expenses by category
+        Last transactions
       </Typography>
-    </Card>
+
+      <Typography variant="subtitle2" color="text.secondary">
+        Check your last transactions
+      </Typography>
+
+      <LastTransactionsTable />
+    </Paper>
   );
 }
 
