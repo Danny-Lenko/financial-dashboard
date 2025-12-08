@@ -3,9 +3,6 @@ import { Typography } from '@mui/material';
 import Paper from '@/components/common/Paper/Paper';
 import LastTransactionsTable from './components/LastTransactionsTable';
 
-// TODO:
-// 1. change formatting in constants to use Intl.NumberFormat for currency formatting
-
 function LastTransactionSection() {
   return (
     <Paper padding={[2, 2, 0]} elevation={1}>

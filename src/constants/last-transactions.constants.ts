@@ -1,27 +1,8 @@
-import type { PaymentMethod, Transaction } from '@/types/transaction.types';
-
-type Formatter = (value: string | number | PaymentMethod) => string;
-
-export interface Column<T> {
-  id: keyof T | 'menu';
-  label: string;
-  format?: Formatter;
-  padding: string;
-}
-
-const formatPaymentMethod = (value: PaymentMethod): string =>
-  value.replace('_', ' ').replace(/\b\w/g, (c) => c.toUpperCase());
-
-const formatDate = (value: string): string => {
-  const dateObject = new Date(value);
-  return dateObject.toLocaleDateString('en-CA').replace(/-/g, '/');
-};
-
-const formatCurrency = (value: number): string =>
-  new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-  }).format(value);
+import type { Column, Formatter } from '@/types/transaction-table.types';
+import type { Transaction } from '@/types/transaction.types';
+import { formatCurrency } from '@/utils/formatters/currency.utils';
+import { formatDate } from '@/utils/formatters/date.utils';
+import { formatPaymentMethod } from '@/utils/formatters/payment-method.utils';
 
 export const TABLE_COLUMNS_CONFIG: Column<Transaction>[] = [
   { id: 'name', label: 'Description', padding: '12px 18px' },
