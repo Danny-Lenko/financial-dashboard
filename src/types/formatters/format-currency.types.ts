@@ -1,1 +1,5 @@
-export type FormatCurrency = (amount: number, currency?: string) => string;
+export type FormatCurrency = (
+  amount: number,
+  currency?: string,
+  showPlusSign?: boolean
+) => string;

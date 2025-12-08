@@ -1,6 +1,6 @@
 import type { Column, Formatter } from '@/types/transaction-table.types';
 import type { Transaction } from '@/types/transaction.types';
-import { formatCurrency } from '@/utils/formatters/currency.utils';
+import { formatCurrencyWithSign } from '@/utils/formatters/currency.utils';
 import { formatDate } from '@/utils/formatters/date.utils';
 import { formatPaymentMethod } from '@/utils/formatters/payment-method.utils';
 
@@ -21,8 +21,8 @@ export const TABLE_COLUMNS_CONFIG: Column<Transaction>[] = [
   {
     id: 'amount',
     label: 'Amount',
-    format: formatCurrency as Formatter,
-    padding: '12px 18px',
+    format: formatCurrencyWithSign as Formatter,
+    padding: '14px 18px',
   },
   { id: 'menu', label: '', padding: '12px 18px' },
 ];
