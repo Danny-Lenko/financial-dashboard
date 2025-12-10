@@ -11,6 +11,7 @@ import {
   THead,
   TR,
 } from './LastTransactionsTable.styles';
+import TableMenu from './TableMenu';
 
 const data = TRANSACTION_DATA.thisMonth.slice(-7);
 
@@ -30,7 +31,11 @@ function LastTransactionsTable() {
             <TR key={transaction.id}>
               {TABLE_COLUMNS_CONFIG.map((column) => {
                 if (column.id === 'menu') {
-                  return <TD key={column.id}>menu</TD>;
+                  return (
+                    <TD key={column.id}>
+                      <TableMenu />
+                    </TD>
+                  );
                 }
 
                 const value = transaction[column.id];

@@ -49,7 +49,7 @@ export const TD = styled(TableCell)<TDProps>(({ theme, color = 'default' }) => {
   };
 
   return {
-    padding: theme.spacing(1.75, 2.5),
+    padding: theme.spacing(1.1, 2.5),
     fontSize: 'calc(13rem/16)',
     fontWeight: 500,
     color: colorMap[color],

@@ -29,8 +29,6 @@ const NavigationLink = styled(Button)<NavigationLinkProps>(({ theme }) => ({
 function Navigation() {
   const routes = getNavigationRoutes();
 
-  console.log('Navigation Routes:', routes);
-
   return (
     <nav>
       <UnorderedList>

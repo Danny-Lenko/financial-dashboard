@@ -4,6 +4,7 @@ import useCashflowAnalysis from '@/hooks/useCashflowAnalysis';
 import { lastMonthCashflow, thisMonthCashflow } from '@/mocks/cashflow.mocks';
 import { CASHFLOW_CATEGORY_ORDER } from '@/constants/cashflow.constants';
 import CashflowCard from './components/CashflowCard';
+import { useAppSelector } from '@/store/hooks';
 
 const Section = styled('section')(({ theme }) => ({
   marginTop: theme.spacing(4),
@@ -13,6 +14,10 @@ const Section = styled('section')(({ theme }) => ({
 }));
 
 function CashflowSection() {
+  const period = useAppSelector((state) => state.period.currentPeriod);
+
+  console.log('Current Period:', period);
+
   const cashflowAnalysis = useCashflowAnalysis({
     previos: lastMonthCashflow,
     current: thisMonthCashflow,
