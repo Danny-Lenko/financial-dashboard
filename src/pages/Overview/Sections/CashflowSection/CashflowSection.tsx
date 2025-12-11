@@ -1,7 +1,7 @@
 import { styled } from '@mui/system';
 
 import useCashflowAnalysis from '@/hooks/useCashflowAnalysis';
-import { lastMonthCashflow, thisMonthCashflow } from '@/mocks/cashflow.mocks';
+import { periodCashflowMap } from '@/mocks/cashflow.mocks';
 import { CASHFLOW_CATEGORY_ORDER } from '@/constants/cashflow.constants';
 import CashflowCard from './components/CashflowCard';
 import { useAppSelector } from '@/store/hooks';
@@ -19,8 +19,8 @@ function CashflowSection() {
   console.log('Current Period:', period);
 
   const cashflowAnalysis = useCashflowAnalysis({
-    previos: lastMonthCashflow,
-    current: thisMonthCashflow,
+    previous: periodCashflowMap[period].previous,
+    current: periodCashflowMap[period].current,
   });
 
   return (

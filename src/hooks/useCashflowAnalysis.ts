@@ -3,13 +3,13 @@ import type { Cashflow, CashflowAnalysis } from '@/types/cashflow.types';
 import { analyzeCashflow } from '@/utils/cashflow.utils';
 
 interface UseCashflowAnalysisParams {
-  previos: Cashflow;
+  previous: Cashflow;
   current: Cashflow;
 }
 
 export default function useCashflowAnalysis({
-  previos,
+  previous,
   current,
 }: UseCashflowAnalysisParams): CashflowAnalysis {
-  return useMemo(() => analyzeCashflow(previos, current), [previos, current]);
+  return useMemo(() => analyzeCashflow(previous, current), [previous, current]);
 }

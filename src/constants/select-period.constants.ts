@@ -1,37 +1,37 @@
 import { Period } from '@/types/select-period.types';
 
 interface PeriodButtonConfig {
-  label: string;
+  name: string;
   value: string;
-  content: string;
+  label: string;
   isStandalone?: boolean;
 }
 
 export const PERIOD_BUTTONS_CONFIG: PeriodButtonConfig[] = [
   {
-    label: 'this month',
+    name: 'this-month',
     value: Period.ThisMonth,
-    content: 'This Month',
+    label: 'This Month',
   },
   {
-    label: 'last month',
+    name: 'last-month',
     value: Period.LastMonth,
-    content: 'Last Month',
+    label: 'Last Month',
   },
   {
-    label: 'this year',
+    name: 'this-year',
     value: Period.ThisYear,
-    content: 'This Year',
+    label: 'This Year',
   },
   {
-    label: 'last year',
+    name: 'last-year',
     value: Period.LastYear,
-    content: 'Last Year',
+    label: 'Last Year',
   },
   {
-    label: 'select period',
+    name: 'select-period',
     value: Period.SelectPeriod,
-    content: 'Select Period',
+    label: 'Select Period',
     isStandalone: true,
   },
 ];

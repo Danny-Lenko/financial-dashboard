@@ -1,13 +1,13 @@
 import type { Cashflow } from '@/types/cashflow.types';
 
 export const twoMonthsAgoCashflow: Cashflow = {
-  incomes: 8450.0,
-  expenses: 5945.55,
+  incomes: 8950.0,
+  expenses: 5045.55,
 };
 
 export const lastMonthCashflow: Cashflow = {
   incomes: 7450.0,
-  expenses: 4945.55,
+  expenses: 4713.55,
 };
 
 export const thisMonthCashflow: Cashflow = {
@@ -28,4 +28,27 @@ export const lastYearCashflow: Cashflow = {
 export const thisYearCashflow: Cashflow = {
   incomes: 84500.0,
   expenses: 59455.5,
+};
+
+export const periodCashflowMap: Record<
+  string,
+  { current: Cashflow; previous: Cashflow }
+> = {
+  'this-month': {
+    current: thisMonthCashflow,
+    previous: lastMonthCashflow,
+  },
+  'last-month': {
+    current: lastMonthCashflow,
+    previous: twoMonthsAgoCashflow,
+  },
+
+  'this-year': {
+    current: thisYearCashflow,
+    previous: lastYearCashflow,
+  },
+  'last-year': {
+    current: lastYearCashflow,
+    previous: twoYearsAgoCashflow,
+  },
 };
