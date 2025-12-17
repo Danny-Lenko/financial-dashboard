@@ -5,8 +5,14 @@ export const periods = {
   lastYear: 'last-year',
 } as const;
 
-export type PeriodValue = (typeof periods)[keyof typeof periods];
+export type Period = (typeof periods)[keyof typeof periods];
+
+interface CurrentPeriod {
+  year: number;
+  month: number;
+}
 
 export interface PeriodState {
-  currentPeriod: PeriodValue;
+  activePeriod: Period;
+  currentPeriod: CurrentPeriod;
 }

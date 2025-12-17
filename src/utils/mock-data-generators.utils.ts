@@ -35,9 +35,9 @@ function randomize(base: number, variance: number = 0.2): number {
 
 // Generates cashflow for a specific month
 export function generateMonthlyCashflow(year: number, month: number): Cashflow {
-  // Trend: older data = larger (were richer in the past)
+  // Trend: older data = smaller (were poorer in the past)
   const monthsAgo = (CURRENT_YEAR - year) * 12 + (CURRENT_MONTH - month);
-  const trendMultiplier = 1 + monthsAgo * 0.03; // +3% per month ago
+  const trendMultiplier = 1 - monthsAgo * 0.03; // -3% per month ago
 
   return {
     incomes: randomize(BASE_INCOME * trendMultiplier, 0.15),
@@ -103,8 +103,6 @@ export function generateTwoYearsData() {
       startMonth = 0;
       endMonth = CURRENT_MONTH;
     }
-    // const startMonth = yearOffset === 1 ? CURRENT_MONTH : 0;
-    // const endMonth = yearOffset === -1 ? CURRENT_MONTH : 11;
 
     for (let month = startMonth; month <= endMonth; month++) {
       const key = `${year}-${String(month).padStart(2, '0')}`;

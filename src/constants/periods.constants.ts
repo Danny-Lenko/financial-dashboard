@@ -1,3 +1,5 @@
+import { getCurrentPeriod } from '@/utils/period-helpers.utils';
+
 export const MONTHS = [
   'January',
   'February',
@@ -13,5 +15,6 @@ export const MONTHS = [
   'December',
 ] as const;
 
-export const CURRENT_YEAR = 2025;
-export const CURRENT_MONTH = 6; // July (0-indexed)
+export const CURRENT_PERIOD = getCurrentPeriod();
+export const CURRENT_YEAR = CURRENT_PERIOD.year;
+export const CURRENT_MONTH = CURRENT_PERIOD.month;

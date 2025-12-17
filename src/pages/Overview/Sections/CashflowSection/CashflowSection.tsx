@@ -14,11 +14,13 @@ const Section = styled('section')(({ theme }) => ({
 }));
 
 function CashflowSection() {
-  const period = useAppSelector((state) => state.period.currentPeriod);
+  const period = useAppSelector((state) => state.period.activePeriod);
+  const { year, month } = useAppSelector((state) => state.period.currentPeriod);
   const data = useAppSelector((state) => state.data.cashflow);
   const expenses = useAppSelector((state) => state.data.expenses);
 
-  console.log('Current Period:', period);
+  console.log('Active Period:', period);
+  console.log('Year:', year, 'Month:', month);
   console.log('Cashflow Data:', data);
   console.log('Expenses Data:', expenses);
 

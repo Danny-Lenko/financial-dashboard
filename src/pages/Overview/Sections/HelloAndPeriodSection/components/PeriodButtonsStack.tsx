@@ -6,7 +6,7 @@ import CalendarSvg from '@assets/calendar.svg?react';
 import type { Period } from '@/types/select-period.types';
 import { PERIOD_BUTTONS_CONFIG } from '@/constants/select-period.constants';
 import { useAppDispatch } from '@/store/hooks';
-import { setPeriod as setGlobalPeriod } from '@/features/period/period.slice';
+import { setActivePeriod } from '@/features/period/period.slice';
 
 const buttonGroup = PERIOD_BUTTONS_CONFIG.filter((btn) => !btn.isStandalone);
 const firstButtonValue = buttonGroup[0].value;
@@ -57,7 +57,7 @@ function PeriodButtonsStack() {
       setPeriod(newPeriod);
       // TEMPO Only update global state for predefined periods
       if (newPeriod !== 'select-period') {
-        dispatch(setGlobalPeriod(newPeriod));
+        dispatch(setActivePeriod(newPeriod));
       }
     }
   };

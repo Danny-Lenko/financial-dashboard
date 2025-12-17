@@ -1,19 +1,21 @@
 import { periods, type PeriodState } from '@/types/features/period.types';
+import { getCurrentPeriod } from '@/utils/period-helpers.utils';
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState: PeriodState = {
-  currentPeriod: periods.thisMonth,
+  activePeriod: periods.thisMonth,
+  currentPeriod: getCurrentPeriod(),
 };
 
 const periodSlice = createSlice({
   name: 'period',
   initialState,
   reducers: {
-    setPeriod(state, action) {
-      state.currentPeriod = action.payload;
+    setActivePeriod(state, action) {
+      state.activePeriod = action.payload;
     },
   },
 });
 
-export const { setPeriod } = periodSlice.actions;
+export const { setActivePeriod } = periodSlice.actions;
 export default periodSlice.reducer;
