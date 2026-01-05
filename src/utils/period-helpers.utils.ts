@@ -1,4 +1,4 @@
-import type { Cashflow } from '@/types/cashflow.types';
+import type { Cashflow } from '@/features/cashflow/types/cashflow.types';
 
 export type PeriodKey = 'this-month' | 'last-month' | 'this-year' | 'last-year';
 

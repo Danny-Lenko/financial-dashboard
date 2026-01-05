@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import type { Cashflow } from '@/types/cashflow.types';
+import type { Cashflow } from '@/features/cashflow/types/cashflow.types';
 import type { ExpensesByPeriodData } from '@/types/expenses.types';
 import { generateTwoYearsData } from '@/utils/mock-data-generators.utils';
 

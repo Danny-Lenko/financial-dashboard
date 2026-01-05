@@ -1,7 +1,7 @@
 import { Button, Stack, Typography } from '@mui/material';
 import { styled } from '@mui/system';
 
-import { AddRecordingButton as AddRecordingButtonType } from '@/types/cashflow.types';
+import { AddRecordingButton as AddRecordingButtonType } from '@/features/cashflow/types/cashflow.types';
 import { ADD_RECORDING_BUTTONS_CONFIG } from '@/constants/cashflow.constants';
 
 const ButtonStyled = styled(Button)(({ theme }) => ({

@@ -1,7 +1,7 @@
 import { Stack, Typography } from '@mui/material';
 
 import { CASHFLOW_CATEGORY_CONFIG } from '@/constants/cashflow.constants';
-import type { CashflowCategory } from '@/types/cashflow.types';
+import type { CashflowCategory } from '@/features/cashflow/types/cashflow.types';
 import { formatCurrency } from '@/utils/formatters/currency.utils';
 import TrendChip from '@/components/common/TrendChip/TrendChip';
 import Paper from '@/components/common/Paper/Paper';

@@ -1,4 +1,4 @@
-import type { Cashflow } from '@/types/cashflow.types';
+import type { Cashflow } from '@/features/cashflow/types/cashflow.types';
 
 export const twoMonthsAgoCashflow: Cashflow = {
   incomes: 8950.0,

@@ -5,7 +5,7 @@ import {
   type MonthlyData,
   type YearGroups,
   type YearlyTotals,
-} from '@/types/cashflow.types';
+} from '@/features/cashflow/types/cashflow.types';
 
 export const calculateTrend = (previos: number, current: number) => {
   return ((current - previos) / previos) * 100;

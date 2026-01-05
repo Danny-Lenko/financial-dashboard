@@ -1,4 +1,4 @@
-import type { Cashflow } from '@/types/cashflow.types';
+import type { Cashflow } from '@/features/cashflow/types/cashflow.types';
 import type { ExpensesByPeriodData } from '@/types/expenses.types';
 import {
   MONTHS,

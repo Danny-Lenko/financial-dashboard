@@ -3,10 +3,7 @@ import { styled } from '@mui/system';
 import { CASHFLOW_CATEGORY_ORDER } from '@/constants/cashflow.constants';
 import CashflowCard from './components/CashflowCard';
 import { useAppSelector } from '@/store/hooks';
-import {
-  selectActivePeriodCashflow,
-  selectCashflowStats,
-} from '@/features/data/data.selectors';
+import { selectCashflowStats } from '@/features/cashflow/selectors/cashflow.selectors';
 
 const Section = styled('section')(({ theme }) => ({
   marginTop: theme.spacing(4),
@@ -16,9 +13,6 @@ const Section = styled('section')(({ theme }) => ({
 }));
 
 function CashflowSection() {
-  const cashflowData = useAppSelector(selectActivePeriodCashflow);
-  console.log('Cashflow data in CashflowSection:', cashflowData);
-
   const stats = useAppSelector(selectCashflowStats);
 
   return (
