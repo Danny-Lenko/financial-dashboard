@@ -1,4 +1,4 @@
-import { getNavigationRoutes } from '@/utils/routers.utils';
+import { getNavigationRoutes } from '@/shared/utils/router.utils';
 import { Button, type ButtonProps } from '@mui/material';
 import { styled } from '@mui/system';
 import { NavLink } from 'react-router-dom';

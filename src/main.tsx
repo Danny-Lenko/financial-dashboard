@@ -6,7 +6,7 @@ import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 
 import { store, persistor } from '@/store/store';
-import { initializeData } from './features/data/data.slice.ts';
+import { initializeData } from './features/data/state/data.slice.ts';
 import theme from '@/theme/theme.tsx';
 import { router } from './routes.tsx';
 import './index.css';

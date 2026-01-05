@@ -10,8 +10,8 @@ import {
   REGISTER,
 } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
-import periodReducer from '../features/period/period.slice';
-import dataReducer from '../features/data/data.slice';
+import periodReducer from '../features/period/state/period.slice';
+import dataReducer from '../features/data/state/data.slice';
 
 const persistConfig = {
   key: 'root',
