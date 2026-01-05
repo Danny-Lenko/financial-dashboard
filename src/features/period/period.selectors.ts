@@ -4,12 +4,14 @@ import { createSelector } from '@reduxjs/toolkit';
 import { periods } from '@/types/features/period.types';
 import { getPreviousMonth, getMonthKey } from '@/utils/period-helpers.utils';
 
+// TODO: selectPreviousPeriodKey default return value for specific periods
+
 export const selectCurrentPeriod = (state: RootState) =>
   state.period.currentPeriod;
 export const selectActivePeriod = (state: RootState) =>
   state.period.activePeriod;
 
-export const selectCurrentActiveMonthKey = createSelector(
+export const selectActivePeriodKey = createSelector(
   [selectCurrentPeriod, selectActivePeriod],
   (currentPeriod, activePeriod) => {
     const { year, month } = currentPeriod;
@@ -24,18 +26,18 @@ export const selectCurrentActiveMonthKey = createSelector(
       }
 
       case periods.thisYear:
-        return getMonthKey(year, month);
+        return year;
 
       case periods.lastYear:
-        return getMonthKey(year - 1, month);
+        return year - 1;
 
       default:
-        return getMonthKey(year, month);
+        return activePeriod;
     }
   }
 );
 
-export const selectPreviousActiveMonthKey = createSelector(
+export const selectPreviousPeriodKey = createSelector(
   [selectCurrentPeriod, selectActivePeriod],
   (currentPeriod, activePeriod) => {
     const { year, month } = currentPeriod;
@@ -52,26 +54,22 @@ export const selectPreviousActiveMonthKey = createSelector(
         return getMonthKey(prevPrev.year, prevPrev.month);
       }
 
-      case periods.thisYear: {
-        const prev = getPreviousMonth(year, month);
-        return getMonthKey(prev.year, prev.month);
-      }
+      case periods.thisYear:
+        return year - 1;
 
-      case periods.lastYear: {
-        const prev = getPreviousMonth(year - 1, month);
-        return getMonthKey(prev.year, prev.month);
-      }
+      case periods.lastYear:
+        return year - 2;
 
       default: {
-        const prev = getPreviousMonth(year, month);
-        return getMonthKey(prev.year, prev.month);
+        // this must be adjusted to return the previous period key based on the chosen active period
+        return activePeriod;
       }
     }
   }
 );
 
 export const selectMonthKeys = createSelector(
-  [selectCurrentActiveMonthKey, selectPreviousActiveMonthKey],
+  [selectActivePeriodKey, selectPreviousPeriodKey],
   (currentKey, previousKey) => ({
     current: currentKey,
     previous: previousKey,

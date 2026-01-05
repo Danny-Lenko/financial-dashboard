@@ -13,10 +13,10 @@ function Overview() {
       <CashflowSection />
       <AddRecordingSection />
       <Grid container spacing={2} marginTop={4} alignItems="flex-start">
-        <Grid size={{ xs: 12, md: 4 }}>
+        <Grid component="section" size={{ xs: 12, md: 4 }}>
           <ExpensesSection />
         </Grid>
-        <Grid size={{ xs: 12, md: 8 }}>
+        <Grid component="section" size={{ xs: 12, md: 8 }}>
           <LastTransactionSection />
         </Grid>
       </Grid>

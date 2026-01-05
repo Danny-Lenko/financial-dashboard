@@ -31,3 +31,17 @@ export const AddRecordingButton = {
 
 export type AddRecordingButton =
   (typeof AddRecordingButton)[keyof typeof AddRecordingButton];
+
+export interface YearGroups {
+  [year: string]: Cashflow[];
+}
+
+export interface MonthlyData {
+  [key: string]: Cashflow;
+}
+
+export interface YearlyTotals {
+  totalIncome: number;
+  totalExpenses: number;
+  totalSavings: number;
+}

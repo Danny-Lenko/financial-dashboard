@@ -5,6 +5,8 @@ import { thisMonthExpensesMock } from '@/mocks/expenses.mocks';
 import PieChart from './components/PieChart';
 import Paper from '@/components/common/Paper/Paper';
 
+// TODO: PIE CHART GOES BEYOND THE CONTAINER BOUNDS ON SOME RESOLUTIONS - FIX IT
+
 function ExpensesSection() {
   return (
     <section>

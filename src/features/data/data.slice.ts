@@ -23,11 +23,6 @@ const dataSlice = createSlice({
     initializeData(state) {
       if (!state.isInitialized) {
         const data = generateTwoYearsData();
-        // const data = {
-        //   cashflow: { 'this-month': { incomes: 0, expenses: 0 } },
-        //   expenses: { 'this-month': { total: 0, period: '', categories: [] } },
-        //   isInitialized: true,
-        // };
         state.cashflow = data.cashflow;
         state.expenses = data.expenses;
         state.isInitialized = true;

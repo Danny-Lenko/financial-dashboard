@@ -1,10 +1,12 @@
 import { styled } from '@mui/system';
 
-import useCashflowAnalysis from '@/hooks/useCashflowAnalysis';
-import { periodCashflowMap } from '@/mocks/cashflow.mocks';
 import { CASHFLOW_CATEGORY_ORDER } from '@/constants/cashflow.constants';
 import CashflowCard from './components/CashflowCard';
 import { useAppSelector } from '@/store/hooks';
+import {
+  selectActivePeriodCashflow,
+  selectCashflowStats,
+} from '@/features/data/data.selectors';
 
 const Section = styled('section')(({ theme }) => ({
   marginTop: theme.spacing(4),
@@ -14,35 +16,21 @@ const Section = styled('section')(({ theme }) => ({
 }));
 
 function CashflowSection() {
-  const period = useAppSelector((state) => state.period.activePeriod);
-  const { year, month } = useAppSelector((state) => state.period.currentPeriod);
-  const data = useAppSelector((state) => state.data.cashflow);
-  const expenses = useAppSelector((state) => state.data.expenses);
+  const cashflowData = useAppSelector(selectActivePeriodCashflow);
+  console.log('Cashflow data in CashflowSection:', cashflowData);
 
-  console.log('Active Period:', period);
-  console.log('Year:', year, 'Month:', month);
-  console.log('Cashflow Data:', data);
-  console.log('Expenses Data:', expenses);
-
-  const cashflowAnalysis = useCashflowAnalysis({
-    previous: periodCashflowMap[period].previous,
-    current: periodCashflowMap[period].current,
-  });
+  const stats = useAppSelector(selectCashflowStats);
 
   return (
     <Section>
-      {CASHFLOW_CATEGORY_ORDER.map((category) => {
-        const { amount, trend } = cashflowAnalysis[category];
-
-        return (
-          <CashflowCard
-            key={category}
-            category={category}
-            amount={amount}
-            trend={trend}
-          />
-        );
-      })}
+      {CASHFLOW_CATEGORY_ORDER.map((category) => (
+        <CashflowCard
+          key={category}
+          category={category}
+          amount={stats[category].amount}
+          trend={stats[category].trend}
+        />
+      ))}
     </Section>
   );
 }

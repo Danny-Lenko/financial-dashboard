@@ -35,51 +35,42 @@ export const getCurrentPeriod = () => {
   return getRealDate();
 };
 
-// export function getCurrentMonthKey(): string {
-//   return getMonthKey(CURRENT_YEAR, CURRENT_MONTH);
-// }
-
-// export function getLastMonthKey(): string {
-//   const lastMonth = CURRENT_MONTH - 1;
-//   return getMonthKey(CURRENT_YEAR, lastMonth);
-// }
-
 // Gets data for a specific period
-export function getKeysForPeriod(period: PeriodKey): {
-  current: string;
-  previous: string;
-} {
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = now.getMonth();
+// export function getKeysForPeriod(period: PeriodKey): {
+//   current: string;
+//   previous: string;
+// } {
+//   const now = new Date();
+//   const year = now.getFullYear();
+//   const month = now.getMonth();
 
-  switch (period) {
-    case 'this-month':
-      return {
-        current: getMonthKey(year, month),
-        previous: getMonthKey(year, month - 1),
-      };
+//   switch (period) {
+//     case 'this-month':
+//       return {
+//         current: getMonthKey(year, month),
+//         previous: getMonthKey(year, month - 1),
+//       };
 
-    case 'last-month':
-      return {
-        current: getMonthKey(year, month - 1),
-        previous: getMonthKey(year, month - 2),
-      };
+//     case 'last-month':
+//       return {
+//         current: getMonthKey(year, month - 1),
+//         previous: getMonthKey(year, month - 2),
+//       };
 
-    case 'this-year':
-      // Sum of all months this year
-      return {
-        current: `${year}-year`,
-        previous: `${year - 1}-year`,
-      };
+//     case 'this-year':
+//       // Sum of all months this year
+//       return {
+//         current: `${year}-year`,
+//         previous: `${year - 1}-year`,
+//       };
 
-    case 'last-year':
-      return {
-        current: `${year - 1}-year`,
-        previous: `${year - 2}-year`,
-      };
-  }
-}
+//     case 'last-year':
+//       return {
+//         current: `${year - 1}-year`,
+//         previous: `${year - 2}-year`,
+//       };
+//   }
+// }
 
 // Aggregates cashflow for a year
 export function aggregateYearlyCashflow(

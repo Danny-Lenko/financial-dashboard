@@ -16,6 +16,7 @@ function CashflowCard({
   trend: number;
 }) {
   const { title, amountColor } = CASHFLOW_CATEGORY_CONFIG[category];
+
   const h2Content = formatCurrency(amount);
 
   return (

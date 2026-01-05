@@ -3,6 +3,7 @@ import { createBrowserRouter, type RouteObject } from 'react-router-dom';
 import Layout from '@/components/layout/Layout.tsx';
 import { ROUTES_CONFIG } from '@/config/router.config';
 import type { RouteConfig } from './types/route.types';
+import RootErrorBoundary from './pages/RootErrorBoundary';
 
 const convertToRouteObject = (config: RouteConfig[]): RouteObject[] => {
   return config.map(({ children, ...route }) => {
@@ -32,7 +33,7 @@ export const router = createBrowserRouter([
   {
     path: '/',
     element: <Layout />,
-    // errorElement: <ErrorPage />,
+    errorElement: <RootErrorBoundary />,
     children: convertToRouteObject(ROUTES_CONFIG),
   },
 ]);
