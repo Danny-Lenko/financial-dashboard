@@ -22,7 +22,7 @@ const NavigationLink = styled(Button)<NavigationLinkProps>(({ theme }) => ({
 
   '&.active': {
     color: theme.palette.primary.main,
-    backgroundColor: theme.palette.action.hover,
+    backgroundColor: theme.palette.action.selected,
   },
 }));
 

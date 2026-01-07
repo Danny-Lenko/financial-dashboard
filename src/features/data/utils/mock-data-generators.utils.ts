@@ -1,12 +1,11 @@
 import type { Cashflow } from '@/features/cashflow/types/cashflow.types';
 import type { ExpensesByPeriodData } from '@/features/expenses/types/expenses.types';
+import { ExpenseCategory } from '@/features/expenses/types/expenses.types';
+import { MONTHS } from '@/shared/constants/months.constants';
 import {
-  MONTHS,
   CURRENT_YEAR,
   CURRENT_MONTH,
-} from '@/features/period/constants/periods.constants';
-
-import { ExpenseCategory } from '@/features/expenses/types/expenses.types';
+} from '@/shared/constants/current-period.constants';
 
 const BASE_INCOME = 9000;
 const BASE_EXPENSE = 4000;

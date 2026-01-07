@@ -1,53 +1,32 @@
 import { ToggleButton, Stack, ToggleButtonGroup } from '@mui/material';
-import { styled } from '@mui/system';
 import { useState } from 'react';
 
 import CalendarSvg from '@assets/calendar.svg?react';
 import type { Period } from '@/features/period/types/period.types';
-import { PERIOD_BUTTONS_CONFIG } from '@/features/period/constants/periods.constants';
+import {
+  CURRENT_MONTH,
+  CURRENT_YEAR,
+} from '@/shared/constants/current-period.constants';
+import { PERIOD_BUTTONS_CONFIG } from '../constants/periods.constants';
 import { useAppDispatch } from '@/store/hooks';
 import { setActivePeriod } from '@/features/period/state/period.slice';
+import PeriodPicker from './PeriodPicker';
+import { StyledExpandableButton } from '@/components/common/PeriodButton/StyledExpandableButton';
 
 const buttonGroup = PERIOD_BUTTONS_CONFIG.filter((btn) => !btn.isStandalone);
 const firstButtonValue = buttonGroup[0].value;
 const buttonStandalone = PERIOD_BUTTONS_CONFIG.find((btn) => btn.isStandalone);
 
-const PeriodButton = styled(ToggleButton)(({ theme }) => ({
-  textTransform: 'capitalize',
-  color: theme.palette.text.secondary,
-  borderColor: theme.palette.divider,
-  padding: theme.spacing(0.7, 2),
-
-  '&:hover': {
-    borderColor: theme.palette.divider,
-  },
-
-  '&:focus': {
-    outline: 'none',
-  },
-
-  '&.Mui-selected': {
-    color: theme.palette.primary.main,
-  },
-
-  svg: {
-    marginRight: theme.spacing(0.5),
-    transform: 'translateY(-1px)',
-    // TEMPO Sets desabled color
-    color: 'lightgray',
-  },
-}));
-
-const PeriodButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
-  '& .MuiButton-root': {
-    borderColor: theme.palette.divider,
-  },
-}));
-
 function PeriodButtonsStack() {
   const dispatch = useAppDispatch();
 
   const [period, setPeriod] = useState<Period>(firstButtonValue);
+
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const [selectedDate, setSelectedDate] = useState({
+    year: CURRENT_YEAR,
+    month: CURRENT_MONTH,
+  });
 
   const handlePeriodChange = (
     _event: React.MouseEvent<HTMLElement>,
@@ -64,34 +43,49 @@ function PeriodButtonsStack() {
 
   return (
     <Stack direction="row" spacing={2}>
-      <PeriodButtonGroup
+      <ToggleButtonGroup
         value={period}
         exclusive
         onChange={handlePeriodChange}
         aria-label="period selection"
       >
         {buttonGroup.map((button) => (
-          <PeriodButton
+          <StyledExpandableButton
+            as={ToggleButton}
             key={button.value}
             aria-label={button.label.toLowerCase()}
             value={button.value}
           >
             {button.label}
-          </PeriodButton>
+          </StyledExpandableButton>
         ))}
-      </PeriodButtonGroup>
+      </ToggleButtonGroup>
 
       {buttonStandalone && (
-        <PeriodButton
-          disabled
-          aria-label={buttonStandalone.label}
-          onChange={handlePeriodChange}
-          selected={period === buttonStandalone.value}
-          value={buttonStandalone.value}
-        >
-          <CalendarSvg width={18} height={18} />
-          Select period
-        </PeriodButton>
+        <>
+          <StyledExpandableButton
+            as={ToggleButton}
+            aria-label={buttonStandalone.label}
+            // onChange={handlePeriodChange}
+            onClick={(e) => setAnchorEl(e.currentTarget)}
+            value={buttonStandalone.value}
+          >
+            <CalendarSvg width={18} height={18} />
+            Select period
+          </StyledExpandableButton>
+
+          <PeriodPicker
+            open={Boolean(anchorEl)}
+            anchorEl={anchorEl}
+            onClose={() => setAnchorEl(null)}
+            onSelect={(year, month) => {
+              setSelectedDate({ year, month });
+              // Fetch data for selected period
+            }}
+            initialYear={selectedDate.year}
+            initialMonth={selectedDate.month}
+          />
+        </>
       )}
     </Stack>
   );
