@@ -66,8 +66,7 @@ export const selectCashflowStartPeriod = createSelector(
   [selectYearlyCashflowStats],
   (data) => {
     const earliestYear = data[data.length - 1].year;
-    // ======================== test this ==================================
-    const earliestMonth = 11 - data[data.length - 1].monthCount;
+    const earliestMonth = 12 - data[data.length - 1].monthCount;
     return { year: earliestYear, month: earliestMonth };
   }
 );

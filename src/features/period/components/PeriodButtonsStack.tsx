@@ -12,6 +12,8 @@ import { useAppDispatch } from '@/store/hooks';
 import { setActivePeriod } from '@/features/period/state/period.slice';
 import PeriodPicker from './PeriodPicker';
 import { StyledExpandableButton } from '@/components/common/PeriodButton/StyledExpandableButton';
+import { getMonthKey } from '../utils/period.utils';
+import { MONTHS } from '@/shared/constants/months.constants';
 
 const buttonGroup = PERIOD_BUTTONS_CONFIG.filter((btn) => !btn.isStandalone);
 const firstButtonValue = buttonGroup[0].value;
@@ -20,7 +22,9 @@ const buttonStandalone = PERIOD_BUTTONS_CONFIG.find((btn) => btn.isStandalone);
 function PeriodButtonsStack() {
   const dispatch = useAppDispatch();
 
-  const [period, setPeriod] = useState<Period>(firstButtonValue);
+  const 
+
+  const [period, setPeriod] = useState<Period | null>(firstButtonValue);
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [selectedDate, setSelectedDate] = useState({
@@ -28,18 +32,24 @@ function PeriodButtonsStack() {
     month: CURRENT_MONTH,
   });
 
+  console.log('Period:', period);
+  console.log('Selected Date:', selectedDate);
+
   const handlePeriodChange = (
     _event: React.MouseEvent<HTMLElement>,
     newPeriod: Period | null
   ) => {
     if (newPeriod !== null) {
       setPeriod(newPeriod);
-      // TEMPO Only update global state for predefined periods
+      // Only update global state for predefined periods
       if (newPeriod !== 'select-period') {
         dispatch(setActivePeriod(newPeriod));
       }
     }
   };
+
+
+
 
   return (
     <Stack direction="row" spacing={2}>
@@ -66,12 +76,16 @@ function PeriodButtonsStack() {
           <StyledExpandableButton
             as={ToggleButton}
             aria-label={buttonStandalone.label}
-            // onChange={handlePeriodChange}
             onClick={(e) => setAnchorEl(e.currentTarget)}
             value={buttonStandalone.value}
+            className={period ? '' : 'Mui-selected'}
           >
             <CalendarSvg width={18} height={18} />
-            Select period
+            {period
+              ? 'Select period'
+              : MONTHS[selectedDate.month].slice(0, 3) +
+                ', ' +
+                selectedDate.year}
           </StyledExpandableButton>
 
           <PeriodPicker
@@ -80,7 +94,8 @@ function PeriodButtonsStack() {
             onClose={() => setAnchorEl(null)}
             onSelect={(year, month) => {
               setSelectedDate({ year, month });
-              // Fetch data for selected period
+              dispatch(setActivePeriod(getMonthKey(year, month)));
+              setPeriod(null);
             }}
             initialYear={selectedDate.year}
             initialMonth={selectedDate.month}

@@ -17,3 +17,12 @@ export const Period = {
 };
 
 export type Period = (typeof Period)[keyof typeof Period];
+
+export interface MonthYearPickerProps {
+  open: boolean;
+  anchorEl: HTMLElement | null;
+  onClose: () => void;
+  onSelect: (year: number, month: number) => void;
+  initialYear?: number;
+  initialMonth?: number;
+}

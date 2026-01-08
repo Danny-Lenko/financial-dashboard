@@ -6,8 +6,7 @@ import {
   getPreviousMonth,
   getMonthKey,
 } from '@/features/period/utils/period.utils';
-
-// TODO: selectPreviousPeriodKey default return value for specific periods
+import { parseMonthKey } from '@/features/cashflow/utils/cashflow.utils';
 
 export const selectCurrentPeriod = (state: RootState) =>
   state.period.currentPeriod;
@@ -45,6 +44,10 @@ export const selectPreviousPeriodKey = createSelector(
   (currentPeriod, activePeriod) => {
     const { year, month } = currentPeriod;
 
+    const { year: activeYear, month: activeMonth } = parseMonthKey(
+      activePeriod.toString()
+    );
+
     switch (activePeriod) {
       case Period.ThisMonth: {
         const prev = getPreviousMonth(year, month);
@@ -64,8 +67,8 @@ export const selectPreviousPeriodKey = createSelector(
         return year - 2;
 
       default: {
-        // this must be adjusted to return the previous period key based on the chosen active period
-        return activePeriod;
+        const prev = getPreviousMonth(activeYear, activeMonth);
+        return getMonthKey(prev.year, prev.month);
       }
     }
   }

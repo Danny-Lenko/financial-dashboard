@@ -4,6 +4,7 @@ import { CASHFLOW_CATEGORY_ORDER } from '@/features/cashflow/constants/cashflow.
 import CashflowCard from './CashflowCard';
 import { useAppSelector } from '@/store/hooks';
 import { selectCashflowStats } from '@/features/cashflow/state/cashflow.selectors';
+import { memo } from 'react';
 
 const Section = styled('section')(({ theme }) => ({
   marginTop: theme.spacing(4),
@@ -29,4 +30,4 @@ function CashflowSection() {
   );
 }
 
-export default CashflowSection;
+export default memo(CashflowSection);
