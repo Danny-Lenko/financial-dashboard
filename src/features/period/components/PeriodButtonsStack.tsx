@@ -22,8 +22,6 @@ const buttonStandalone = PERIOD_BUTTONS_CONFIG.find((btn) => btn.isStandalone);
 function PeriodButtonsStack() {
   const dispatch = useAppDispatch();
 
-  const 
-
   const [period, setPeriod] = useState<Period | null>(firstButtonValue);
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
@@ -47,9 +45,6 @@ function PeriodButtonsStack() {
       }
     }
   };
-
-
-
 
   return (
     <Stack direction="row" spacing={2}>
