@@ -1,7 +1,6 @@
-import { useState } from 'react';
-import { Box, IconButton, Typography, Popover, Paper } from '@mui/material';
+import { useEffect, useState } from 'react';
+import { IconButton, Typography, Popover } from '@mui/material';
 import { ChevronLeft, ChevronRight } from '@mui/icons-material';
-import { styled } from '@mui/system';
 
 import { StyledExpandableButton } from '@/components/common/PeriodButton/StyledExpandableButton';
 import { MONTHS } from '@/shared/constants/months.constants';
@@ -10,47 +9,34 @@ import {
   CURRENT_MONTH,
   CURRENT_YEAR,
 } from '@/shared/constants/current-period.constants';
-import {
-  selectActiveYearCashflow,
-  selectCashflowStartPeriod,
-} from '@/features/cashflow/state/cashflow.selectors';
+import { selectCashflowStartPeriod } from '@/features/cashflow/state/cashflow.selectors';
 import type { MonthYearPickerProps } from '../types/period.types';
-
-const Container = styled(Paper)(({ theme }) => {
-  return {
-    minWidth: 300,
-    padding: theme.spacing(2),
-  };
-});
-
-const YearSelector = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-  marginBottom: theme.spacing(2),
-}));
-
-const MonthGrid = styled(Box)(({ theme }) => ({
-  display: 'grid',
-  gridTemplateColumns: 'repeat(3, 1fr)',
-  gap: theme.spacing(1),
-}));
+import {
+  Container,
+  MonthGrid,
+  YearSelector,
+} from '../styles/PeriodPicker.styles';
+import { selectActivePeriodInfo } from '../state/period.selectors';
 
 export const PeriodPicker = ({
   open,
   anchorEl,
   onClose,
   onSelect,
-  initialYear = new Date().getFullYear(),
-  initialMonth = new Date().getMonth(),
 }: MonthYearPickerProps) => {
-  const { year: startYear, month: startMonth } = useAppSelector(
-    selectCashflowStartPeriod
-  )!;
+  const periodInfo = useAppSelector(selectActivePeriodInfo);
+  const startPeriod = useAppSelector(selectCashflowStartPeriod);
 
-  const isYearlyPeriod = useAppSelector(selectActiveYearCashflow) !== null;
+  const initialYear =
+    periodInfo.type === 'month' ? periodInfo.year : CURRENT_YEAR;
 
   const [selectedYear, setSelectedYear] = useState(initialYear);
+
+  useEffect(() => {
+    if (open && periodInfo.type === 'month') {
+      setSelectedYear(periodInfo.year);
+    }
+  }, [open, periodInfo]);
 
   const handleMonthSelect = (monthIndex: number) => {
     onSelect(selectedYear, monthIndex);
@@ -63,7 +49,7 @@ export const PeriodPicker = ({
       return true;
     }
     // Disable months before data start period
-    if (selectedYear === startYear && monthIndex < startMonth) {
+    if (selectedYear === startPeriod.year && monthIndex < startPeriod.month) {
       return true;
     }
     // Disable all months if year is in the future
@@ -86,7 +72,7 @@ export const PeriodPicker = ({
           <IconButton
             size="small"
             onClick={() => setSelectedYear(selectedYear - 1)}
-            disabled={selectedYear <= startYear} // Min year
+            disabled={selectedYear <= startPeriod.year} // Min year
           >
             <ChevronLeft />
           </IconButton>
@@ -107,9 +93,9 @@ export const PeriodPicker = ({
         <MonthGrid>
           {MONTHS.map((month, index) => {
             const isSelected =
-              selectedYear === initialYear &&
-              index === initialMonth &&
-              !isYearlyPeriod;
+              periodInfo.type === 'month' &&
+              selectedYear === periodInfo.year &&
+              index === periodInfo.month;
             const isDisabled = isMonthDisabled(index);
 
             return (

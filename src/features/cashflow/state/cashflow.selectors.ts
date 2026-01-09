@@ -1,8 +1,8 @@
 import { createSelector } from '@reduxjs/toolkit';
 
 import {
-  selectActivePeriodKey,
-  selectPreviousPeriodKey,
+  selectActivePeriod,
+  selectPreviousPeriod,
 } from '@/features/period/state/period.selectors';
 import { selectCashflowData } from '@/features/data/state/data.selectors';
 import {
@@ -24,12 +24,12 @@ export const selectYearlyCashflowStats = createSelector(
 );
 
 export const selectActiveMonthCashflow = createSelector(
-  [selectCashflowData, selectActivePeriodKey],
+  [selectCashflowData, selectActivePeriod],
   (cashflow, currentKey) => cashflow[currentKey] || null
 );
 
 export const selectActiveYearCashflow = createSelector(
-  [selectYearlyCashflowStats, selectActivePeriodKey],
+  [selectYearlyCashflowStats, selectActivePeriod],
   (yearlyAverages, selectedYear) => {
     return yearlyAverages.find((item) => item.year === selectedYear) || null;
   }
@@ -41,12 +41,12 @@ export const selectActivePeriodCashflow = createSelector(
 );
 
 export const selectPreviousMonthCashflow = createSelector(
-  [selectCashflowData, selectPreviousPeriodKey],
+  [selectCashflowData, selectPreviousPeriod],
   (cashflow, previousKey) => cashflow[previousKey] || null
 );
 
 export const selectPreviousYearCashflow = createSelector(
-  [selectYearlyCashflowStats, selectPreviousPeriodKey],
+  [selectYearlyCashflowStats, selectPreviousPeriod],
   (yearlyAverages, selectedYear) => {
     return yearlyAverages.find((item) => item.year === selectedYear) || null;
   }

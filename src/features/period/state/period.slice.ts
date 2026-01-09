@@ -1,10 +1,10 @@
-import { Period, type PeriodState } from '@/features/period/types/period.types';
-import { getCurrentPeriod } from '@/features/period/utils/period.utils';
 import { createSlice } from '@reduxjs/toolkit';
 
+import { type PeriodState } from '@/features/period/types/period.types';
+import { CURRENT_MONTH_KEY } from '@/shared/constants/current-period.constants';
+
 const initialState: PeriodState = {
-  activePeriod: Period.ThisMonth,
-  currentPeriod: getCurrentPeriod(),
+  activePeriod: CURRENT_MONTH_KEY,
 };
 
 const periodSlice = createSlice({
