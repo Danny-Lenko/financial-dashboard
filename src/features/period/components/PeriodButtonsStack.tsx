@@ -19,6 +19,10 @@ const buttonGroup = PERIOD_BUTTONS_CONFIG.filter((btn) => !btn.isStandalone);
 const firstButtonValue = buttonGroup[0].value;
 const buttonStandalone = PERIOD_BUTTONS_CONFIG.find((btn) => btn.isStandalone);
 
+// TODO: think about refactoring this component to maybe separate predefined periods and custom period selection
+// TODO: think about refactoring to maybe move the logic to selectors & hide implementation details,
+// so all the state had one source of truth (redux store) and based on that state buttons decided the "selected" state
+
 function PeriodButtonsStack() {
   const dispatch = useAppDispatch();
 
@@ -30,18 +34,24 @@ function PeriodButtonsStack() {
     month: CURRENT_MONTH,
   });
 
-  console.log('Period:', period);
-  console.log('Selected Date:', selectedDate);
-
   const handlePeriodChange = (
     _event: React.MouseEvent<HTMLElement>,
     newPeriod: Period | null
   ) => {
+    console.log('Selected period:', newPeriod);
     if (newPeriod !== null) {
       setPeriod(newPeriod);
       // Only update global state for predefined periods
       if (newPeriod !== 'select-period') {
         dispatch(setActivePeriod(newPeriod));
+      }
+      if (newPeriod === 'this-month') {
+        setSelectedDate({ year: CURRENT_YEAR, month: CURRENT_MONTH });
+      }
+      if (newPeriod === 'last-month') {
+        const lastMonth = CURRENT_MONTH === 0 ? 11 : CURRENT_MONTH - 1;
+        const year = CURRENT_MONTH === 0 ? CURRENT_YEAR - 1 : CURRENT_YEAR;
+        setSelectedDate({ year, month: lastMonth });
       }
     }
   };
@@ -90,6 +100,12 @@ function PeriodButtonsStack() {
             onSelect={(year, month) => {
               setSelectedDate({ year, month });
               dispatch(setActivePeriod(getMonthKey(year, month)));
+              if (year === CURRENT_YEAR && month === CURRENT_MONTH) {
+                return setPeriod('this-month');
+              }
+              if (year === CURRENT_YEAR && month === CURRENT_MONTH - 1) {
+                return setPeriod('last-month');
+              }
               setPeriod(null);
             }}
             initialYear={selectedDate.year}

@@ -10,7 +10,10 @@ import {
   CURRENT_MONTH,
   CURRENT_YEAR,
 } from '@/shared/constants/current-period.constants';
-import { selectCashflowStartPeriod } from '@/features/cashflow/state/cashflow.selectors';
+import {
+  selectActiveYearCashflow,
+  selectCashflowStartPeriod,
+} from '@/features/cashflow/state/cashflow.selectors';
 import type { MonthYearPickerProps } from '../types/period.types';
 
 const Container = styled(Paper)(({ theme }) => {
@@ -44,6 +47,8 @@ export const PeriodPicker = ({
   const { year: startYear, month: startMonth } = useAppSelector(
     selectCashflowStartPeriod
   )!;
+
+  const isYearlyPeriod = useAppSelector(selectActiveYearCashflow) !== null;
 
   const [selectedYear, setSelectedYear] = useState(initialYear);
 
@@ -102,7 +107,9 @@ export const PeriodPicker = ({
         <MonthGrid>
           {MONTHS.map((month, index) => {
             const isSelected =
-              selectedYear === initialYear && index === initialMonth;
+              selectedYear === initialYear &&
+              index === initialMonth &&
+              !isYearlyPeriod;
             const isDisabled = isMonthDisabled(index);
 
             return (
