@@ -1,14 +1,12 @@
-import type { RouteConfig } from '@/types/route.types';
+import type { RouteConfig } from '@/shared/types/route.types';
 import { lazy } from 'react';
 import { Navigate } from 'react-router-dom';
 
-const OverviewPage = lazy(() => import('@/pages/Overview/Overview'));
-const TransactionsPage = lazy(
-  () => import('@/pages/Transactions/Transactions')
-);
+const OverviewPage = lazy(() => import('@/pages/Overview'));
+const TransactionsPage = lazy(() => import('@/pages/Transactions'));
 // const TransactionDetailPage = lazy(() => import('@/pages/TransactionDetail/TransactionDetail'));
 // const TransactionEditPage = lazy(() => import('@/pages/TransactionEdit/TransactionEdit'));
-const CategoriesPage = lazy(() => import('@/pages/Categories/Categories'));
+const CategoriesPage = lazy(() => import('@/pages/Categories'));
 
 const BASE_PATHS = {
   overview: '/',

@@ -1,4 +1,4 @@
-import { getNavigationRoutes } from '@/utils/routers.utils';
+import { getNavigationRoutes } from '@/shared/utils/router.utils';
 import { Button, type ButtonProps } from '@mui/material';
 import { styled } from '@mui/system';
 import { NavLink } from 'react-router-dom';
@@ -22,7 +22,7 @@ const NavigationLink = styled(Button)<NavigationLinkProps>(({ theme }) => ({
 
   '&.active': {
     color: theme.palette.primary.main,
-    backgroundColor: theme.palette.action.hover,
+    backgroundColor: theme.palette.action.selected,
   },
 }));
 

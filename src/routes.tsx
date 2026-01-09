@@ -2,7 +2,7 @@ import { createBrowserRouter, type RouteObject } from 'react-router-dom';
 
 import Layout from '@/components/layout/Layout.tsx';
 import { ROUTES_CONFIG } from '@/config/router.config';
-import type { RouteConfig } from './types/route.types';
+import type { RouteConfig } from './shared/types/route.types';
 import RootErrorBoundary from './pages/RootErrorBoundary';
 
 const convertToRouteObject = (config: RouteConfig[]): RouteObject[] => {
