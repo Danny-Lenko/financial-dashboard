@@ -1,12 +1,15 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import type { Cashflow } from '@/features/cashflow/types/cashflow.types';
-import type { ExpensesByPeriodData } from '@/features/expenses/types/expenses.types';
+import type {
+  ExpensesData,
+  MonthExpenses,
+} from '@/features/expenses/types/expenses.types';
 import { generateTwoYearsData } from '@/features/data/utils/mock-data-generators.utils';
 
 interface DataState {
   cashflow: Record<string, Cashflow>;
-  expenses: Record<string, ExpensesByPeriodData>;
+  expenses: ExpensesData;
   isInitialized: boolean;
 }
 
@@ -39,7 +42,7 @@ const dataSlice = createSlice({
 
     updateExpenses(
       state,
-      action: PayloadAction<{ key: string; data: ExpensesByPeriodData }>
+      action: PayloadAction<{ key: string; data: MonthExpenses }>
     ) {
       const { key, data } = action.payload;
       state.expenses[key] = data;

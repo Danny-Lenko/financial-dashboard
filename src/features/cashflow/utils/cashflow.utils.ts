@@ -6,6 +6,7 @@ import {
   type YearGroups,
   type YearlyTotals,
 } from '@/features/cashflow/types/cashflow.types';
+import { parseMonthKey } from '@/shared/utils/parseMonthKey.utils';
 
 export const calculateTrend = (previos: number, current: number) => {
   if (previos === 0) {
@@ -39,15 +40,6 @@ export const analyzeCashflow = ({
     [CashflowCategory.Balance]: analyze(currentBalance, prevBalance),
     [CashflowCategory.Incomes]: analyze(current.incomes, previous?.incomes),
     [CashflowCategory.Expenses]: analyze(current.expenses, previous?.expenses),
-  };
-};
-
-export const parseMonthKey = (key: string) => {
-  const [year, month] = key.split('-');
-  return {
-    year: parseInt(year),
-    month: parseInt(month),
-    key,
   };
 };
 

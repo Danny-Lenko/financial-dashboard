@@ -1,25 +1,57 @@
 import { Stack, Typography } from '@mui/material';
 
 import { EXPENSES_CONFIG } from '@/features/expenses/constants/expenses.constants';
-import { thisMonthExpensesMock } from '@/features/expenses/mocks/expenses.mocks';
 import PieChart from './PieChart';
 import Paper from '@/components/common/Paper/Paper';
+import { useAppSelector } from '@/store/hooks';
+import { selectActivePeriodExpenses } from '../state/expenses.selectors';
+import AppChip from '@/components/common/AppChip/AppChip';
 
 // TODO: PIE CHART GOES BEYOND THE CONTAINER BOUNDS ON SOME RESOLUTIONS - FIX IT
 
 function ExpensesSection() {
+  const expensesData = useAppSelector(selectActivePeriodExpenses);
+
+  if (!expensesData) {
+    return null;
+  }
+
+  const isYearlyStats = 'year' in expensesData;
+
+  const pieChartData = expensesData.categories.map((category) => ({
+    name: category.name,
+    amount: category.amount,
+  }));
+
   return (
     <section>
       <Paper elevation={1}>
-        <Typography variant="subtitle1" color="text.secondary" fontWeight={600}>
-          Expenses by category
-        </Typography>
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+          marginBottom={2}
+        >
+          <Typography
+            variant="subtitle1"
+            color="text.secondary"
+            fontWeight={600}
+          >
+            Expenses by category
+          </Typography>
+          {isYearlyStats && (
+            <AppChip
+              sx={{ marginLeft: 'auto', display: 'inline' }}
+              label="Average"
+            />
+          )}
+        </Stack>
 
-        <PieChart />
+        <PieChart data={pieChartData} />
 
         {EXPENSES_CONFIG.map((expense) => {
-          const { percentage } = thisMonthExpensesMock.categories.find(
-            (expenseData) => expenseData.name === expense.name
+          const { percentage } = expensesData.categories.find(
+            (expensesData) => expensesData.name === expense.name
           )!;
 
           return (
@@ -46,7 +78,7 @@ function ExpensesSection() {
                 color="text.secondary"
                 marginLeft="auto"
               >
-                {percentage}%
+                {percentage.toFixed(2)}%
               </Typography>
             </Stack>
           );
