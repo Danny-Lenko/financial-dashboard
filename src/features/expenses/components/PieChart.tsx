@@ -1,17 +1,13 @@
 import { Cell, Pie, PieChart as Chart } from 'recharts';
 import { useTheme } from '@mui/material/styles';
 
-import { thisMonthExpensesMock } from '@/features/expenses/mocks/expenses.mocks';
 import { getCategoryColor } from '@/features/expenses/utils/expenses.utils';
 
-const data = thisMonthExpensesMock.categories as {
-  name: string;
-  amount: number;
-}[];
-
 export default function PieChart({
+  data,
   isAnimationActive = true,
 }: {
+  data: { name: string; amount: number }[];
   isAnimationActive?: boolean;
 }) {
   const theme = useTheme();

@@ -5,7 +5,7 @@ import {
   getPreviousMonth,
   getMonthKey,
 } from '@/features/period/utils/period.utils';
-import { parseMonthKey } from '@/features/cashflow/utils/cashflow.utils';
+import { parseMonthKey } from '@/shared/utils/parseMonthKey.utils';
 
 export const selectActivePeriod = (state: RootState) =>
   state.period.activePeriod;

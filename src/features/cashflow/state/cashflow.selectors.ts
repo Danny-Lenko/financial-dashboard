@@ -11,7 +11,6 @@ import {
   groupMonthsByYear,
 } from '@/features/cashflow/utils/cashflow.utils';
 
-// ========= Cashflow Selectors
 export const selectYearlyCashflowStats = createSelector(
   [selectCashflowData],
   (monthlyData) => {
