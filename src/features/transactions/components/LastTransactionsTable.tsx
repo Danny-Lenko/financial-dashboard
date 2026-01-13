@@ -1,8 +1,8 @@
 import { TableBody } from '@mui/material';
 
-import { getCellColor } from '@/features/last-transactions/utils/last-transactions.utils';
-import { TABLE_COLUMNS_CONFIG } from '@/features/last-transactions/constants/last-transactions.constants';
-import { TRANSACTION_DATA } from '@/features/last-transactions/mocks/last-transactions.mocks';
+import { getCellColor } from '@/features/transactions/utils/last-transactions.utils';
+import { TABLE_COLUMNS_CONFIG } from '@/features/transactions/constants/last-transactions.constants';
+import { TRANSACTION_DATA } from '@/features/transactions/mocks/last-transactions.mocks';
 import {
   Table,
   TableWrapper,
@@ -12,10 +12,15 @@ import {
   TR,
 } from '../styles/LastTransactionsTable.styles';
 import TableMenu from './TableMenu';
+import { useAppSelector } from '@/store/hooks';
+import { selectTransactionsData } from '@/features/data/state/data.selectors';
 
 const data = TRANSACTION_DATA.thisMonth.slice(-7);
 
 function LastTransactionsTable() {
+  const reduxData = useAppSelector(selectTransactionsData);
+  console.log('Transactions Data from Redux:', reduxData);
+
   return (
     <TableWrapper>
       <Table style={{ width: '100%' }}>

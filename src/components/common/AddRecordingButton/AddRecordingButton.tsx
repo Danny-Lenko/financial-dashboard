@@ -1,8 +1,8 @@
 import { Button, Stack, Typography } from '@mui/material';
 import { styled } from '@mui/system';
 
-import { AddRecordingButton as AddRecordingButtonType } from '@/features/cashflow/types/cashflow.types';
-import { ADD_RECORDING_BUTTONS_CONFIG } from '@/features/cashflow/constants/cashflow.constants';
+import { AddRecordingButton as AddRecordingButtonType } from '@/features/add-recording/types/add-recording.types';
+import { ADD_RECORDING_BUTTONS_CONFIG } from '@/features/add-recording/constants/add-recording.constants';
 
 const ButtonStyled = styled(Button)(({ theme }) => ({
   width: '100%',

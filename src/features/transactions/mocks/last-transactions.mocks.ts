@@ -1,4 +1,4 @@
-import type { Transaction } from '@/features/last-transactions/types/transaction.types';
+import type { Transaction } from '@/features/transactions/types/transaction.types';
 
 export const transactionsThisMonth: Transaction[] = [
   {

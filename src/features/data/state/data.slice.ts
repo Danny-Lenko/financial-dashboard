@@ -1,21 +1,27 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import type { Cashflow } from '@/features/cashflow/types/cashflow.types';
+import type {
+  CashflowData,
+  MonthCashflow,
+} from '@/features/cashflow/types/cashflow.types';
 import type {
   ExpensesData,
   MonthExpenses,
 } from '@/features/expenses/types/expenses.types';
 import { generateTwoYearsData } from '@/features/data/utils/mock-data-generators.utils';
+import type { TransactionsData } from '@/features/transactions/types/transaction.types';
 
 interface DataState {
-  cashflow: Record<string, Cashflow>;
+  cashflow: CashflowData;
   expenses: ExpensesData;
+  transactions: TransactionsData;
   isInitialized: boolean;
 }
 
 const initialState: DataState = {
   cashflow: {},
   expenses: {},
+  transactions: {},
   isInitialized: false,
 };
 
@@ -28,13 +34,14 @@ const dataSlice = createSlice({
         const data = generateTwoYearsData();
         state.cashflow = data.cashflow;
         state.expenses = data.expenses;
+        state.transactions = data.transactions;
         state.isInitialized = true;
       }
     },
 
     updateCashflow(
       state,
-      action: PayloadAction<{ key: string; data: Cashflow }>
+      action: PayloadAction<{ key: string; data: MonthCashflow }>
     ) {
       const { key, data } = action.payload;
       state.cashflow[key] = data;

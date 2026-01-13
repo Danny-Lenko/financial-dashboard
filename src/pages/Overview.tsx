@@ -4,7 +4,7 @@ import AddRecordingSection from '../features/add-recording/components/AddRecordi
 import CashflowSection from '@/features/cashflow/components/CashflowSection';
 import HelloAndPeriodSection from '@/features/period/components/HelloAndPeriodSection';
 import ExpensesSection from '@/features/expenses/components/ExpensesSection';
-import LastTransactionSection from '@/features/last-transactions/components/LastTransactionSection';
+import LastTransactionSection from '@/features/transactions/components/LastTransactionSection';
 
 function Overview() {
   return (

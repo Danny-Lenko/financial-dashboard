@@ -1,6 +1,6 @@
 import { styled } from '@mui/system';
 
-import { ADD_RECORDING_BUTTONS_ORDER } from '@/features/cashflow/constants/cashflow.constants';
+import { ADD_RECORDING_BUTTONS_ORDER } from '../constants/add-recording.constants';
 import AddCashflowRecordingButton from '@/components/common/AddRecordingButton/AddRecordingButton';
 
 const Section = styled('section')(({ theme }) => ({

@@ -1,29 +1,25 @@
-import type { Cashflow } from '@/features/cashflow/types/cashflow.types';
-import type { ExpensesByPeriodData } from '@/features/expenses/types/expenses.types';
-import { ExpenseCategory } from '@/features/expenses/types/expenses.types';
+import type {
+  CashflowData,
+  MonthCashflow,
+} from '@/features/cashflow/types/cashflow.types';
+import type {
+  ExpensesData,
+  MonthExpenses,
+} from '@/features/expenses/types/expenses.types';
+import { EXPENSE_CATEGORIES_CONFIG } from '@/features/expenses/types/expenses.types';
 import { MONTHS } from '@/shared/constants/months.constants';
 import {
   CURRENT_YEAR,
   CURRENT_MONTH,
 } from '@/shared/constants/current-period.constants';
+import type { Transaction } from '@/features/transactions/types/transaction.types';
+import {
+  EXPENSE_SOURCES,
+  INCOME_SOURCES,
+} from '@/features/transactions/constants/last-transactions.constants';
 
 const BASE_INCOME = 9000;
 const BASE_EXPENSE = 4000;
-
-interface ExpenseCategoryConfig {
-  id: string;
-  name: ExpenseCategory;
-  basePercentage: number;
-}
-
-const EXPENSE_CATEGORIES_CONFIG: ExpenseCategoryConfig[] = [
-  { id: '1', name: ExpenseCategory.House, basePercentage: 40 },
-  { id: '2', name: ExpenseCategory.Charges, basePercentage: 20 },
-  { id: '3', name: ExpenseCategory.Transportation, basePercentage: 13 },
-  { id: '4', name: ExpenseCategory.Groceries, basePercentage: 10 },
-  { id: '5', name: ExpenseCategory.Entertainment, basePercentage: 7 },
-  { id: '6', name: ExpenseCategory.Shopping, basePercentage: 10 },
-];
 
 // Generates a random number with variance
 function randomize(base: number, variance: number = 0.2): number {
@@ -33,7 +29,10 @@ function randomize(base: number, variance: number = 0.2): number {
 }
 
 // Generates cashflow for a specific month
-export function generateMonthlyCashflow(year: number, month: number): Cashflow {
+export function generateMonthlyCashflow(
+  year: number,
+  month: number
+): MonthCashflow {
   // Trend: older data = smaller (were poorer in the past)
   const monthsAgo = (CURRENT_YEAR - year) * 12 + (CURRENT_MONTH - month);
   const trendMultiplier = 1 - monthsAgo * 0.03; // -3% per month ago
@@ -49,7 +48,7 @@ export function generateMonthlyExpenses(
   year: number,
   month: number,
   totalExpense: number
-): ExpensesByPeriodData {
+): MonthExpenses {
   const categories = EXPENSE_CATEGORIES_CONFIG.map((cat) => {
     const amount = randomize((totalExpense * cat.basePercentage) / 100, 0.25);
     return {
@@ -75,14 +74,82 @@ export function generateMonthlyExpenses(
   };
 }
 
+// Генерує випадкову дату в межах місяця
+function randomDateInMonth(year: number, month: number): string {
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const day = Math.floor(Math.random() * daysInMonth) + 1;
+  return `${year}/${String(month + 1).padStart(2, '0')}/${String(day).padStart(2, '0')}`;
+}
+
+// Генерує транзакції для місяця
+function generateMonthlyTransactions(
+  year: number,
+  month: number
+): Transaction[] {
+  const transactions: Transaction[] = [];
+  let idCounter = 1;
+
+  // 3-5 доходів
+  const incomeCount = 3 + Math.floor(Math.random() * 3);
+  for (let i = 0; i < incomeCount; i++) {
+    const totalWeight = INCOME_SOURCES.reduce((sum, s) => sum + s.weight, 0);
+    let random = Math.random() * totalWeight;
+    let source = INCOME_SOURCES.at(0)!;
+
+    for (const s of INCOME_SOURCES) {
+      random -= s.weight;
+      if (random <= 0) {
+        source = s;
+        break;
+      }
+    }
+
+    transactions.push({
+      id: `${year}-${month}-${idCounter++}`,
+      name: source.name,
+      method: 'bank_account',
+      date: randomDateInMonth(year, month),
+      amount: randomize(800, 0.3),
+    });
+  }
+
+  // 15-17 витрат
+  const expenseCount = 20 - incomeCount;
+  for (let i = 0; i < expenseCount; i++) {
+    const source =
+      EXPENSE_SOURCES[Math.floor(Math.random() * EXPENSE_SOURCES.length)];
+    const method =
+      source.name === 'Mortgage'
+        ? 'bank_account'
+        : Math.random() > 0.5
+          ? 'credit_card'
+          : 'debit_card';
+
+    transactions.push({
+      id: `${year}-${month}-${idCounter++}`,
+      name: source.name,
+      method,
+      date: randomDateInMonth(year, month),
+      amount: -randomize(source.amount, 0.3),
+    });
+  }
+
+  // Сортуємо за датою (найновіші спочатку)
+  return transactions.sort(
+    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+  );
+}
+
 // Generates all data for 2 years
 export function generateTwoYearsData() {
   const data: {
-    cashflow: Record<string, Cashflow>;
-    expenses: Record<string, ExpensesByPeriodData>;
+    cashflow: CashflowData;
+    expenses: ExpensesData;
+    transactions: { [key: string]: Transaction[] };
   } = {
     cashflow: {},
     expenses: {},
+    transactions: {},
   };
 
   // Generates data for 24 months
@@ -113,6 +180,7 @@ export function generateTwoYearsData() {
         month,
         cashflow.expenses
       );
+      data.transactions[key] = generateMonthlyTransactions(year, month);
     }
   }
 
