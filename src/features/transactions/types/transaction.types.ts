@@ -12,7 +12,9 @@ export interface TransactionsData {
   [key: string]: Transaction[];
 }
 
-export type Formatter = (value: string | number | PaymentMethod) => string;
+export type Formatter = (
+  value: string | number | PaymentMethod
+) => string | JSX.Element;
 
 export interface Column<T> {
   id: keyof T | 'menu';

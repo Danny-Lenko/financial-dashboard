@@ -74,14 +74,14 @@ export function generateMonthlyExpenses(
   };
 }
 
-// Генерує випадкову дату в межах місяця
+// Generates a random date string within the given month
 function randomDateInMonth(year: number, month: number): string {
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   const day = Math.floor(Math.random() * daysInMonth) + 1;
   return `${year}/${String(month + 1).padStart(2, '0')}/${String(day).padStart(2, '0')}`;
 }
 
-// Генерує транзакції для місяця
+// Generates transactions for a specific month
 function generateMonthlyTransactions(
   year: number,
   month: number
@@ -89,7 +89,7 @@ function generateMonthlyTransactions(
   const transactions: Transaction[] = [];
   let idCounter = 1;
 
-  // 3-5 доходів
+  // 3-5 incomes
   const incomeCount = 3 + Math.floor(Math.random() * 3);
   for (let i = 0; i < incomeCount; i++) {
     const totalWeight = INCOME_SOURCES.reduce((sum, s) => sum + s.weight, 0);
@@ -113,7 +113,7 @@ function generateMonthlyTransactions(
     });
   }
 
-  // 15-17 витрат
+  // 15-17 expenses
   const expenseCount = 20 - incomeCount;
   for (let i = 0; i < expenseCount; i++) {
     const source =
@@ -134,7 +134,7 @@ function generateMonthlyTransactions(
     });
   }
 
-  // Сортуємо за датою (найновіші спочатку)
+  // Sort by date (newest first)
   return transactions.sort(
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
   );
