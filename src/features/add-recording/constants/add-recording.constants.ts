@@ -11,7 +11,12 @@ export const ADD_RECORDING_BUTTONS_ORDER = [
 
 export const ADD_RECORDING_BUTTONS_CONFIG: Record<
   AddRecordingButton,
-  { title: string; subtitle: string; icon: React.ElementType }
+  {
+    title: string;
+    subtitle: string;
+    icon: React.ElementType;
+    disabled?: boolean;
+  }
 > = {
   [AddRecordingButton.Income]: {
     title: 'Add income',
@@ -27,5 +32,6 @@ export const ADD_RECORDING_BUTTONS_CONFIG: Record<
     title: 'Transfer money',
     subtitle: 'Select the amount and make a transfer',
     icon: TransferMoneySvg,
+    disabled: true,
   },
 };

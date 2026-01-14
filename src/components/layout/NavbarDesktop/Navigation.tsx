@@ -1,3 +1,4 @@
+import DisabledElementTooltip from '@/components/common/DisabledElementTooltip/DisabledElementTooltip';
 import { getNavigationRoutes } from '@/shared/utils/router.utils';
 import { Button, type ButtonProps } from '@mui/material';
 import { styled } from '@mui/system';
@@ -32,18 +33,26 @@ function Navigation() {
   return (
     <nav>
       <UnorderedList>
-        {routes.map((route) => (
-          <li key={route.navigationLabel}>
-            <NavigationLink
-              disabled={route.disabled}
-              component={NavLink}
-              to={route.path ?? '#'}
-              size="large"
-            >
-              {route.navigationLabel}
-            </NavigationLink>
-          </li>
-        ))}
+        {routes.map((route) => {
+          const listEl = (
+            <li key={route.navigationLabel}>
+              <NavigationLink
+                disabled={route.disabled}
+                component={NavLink}
+                to={route.path ?? '#'}
+                size="large"
+              >
+                {route.navigationLabel}
+              </NavigationLink>
+            </li>
+          );
+
+          if (route.disabled) {
+            return <DisabledElementTooltip>{listEl}</DisabledElementTooltip>;
+          }
+
+          return listEl;
+        })}
       </UnorderedList>
     </nav>
   );
