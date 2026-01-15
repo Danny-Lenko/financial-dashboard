@@ -12,7 +12,6 @@ const DisabledElementTooltip: React.FC<Props> = ({
   return (
     <Tooltip
       title={content}
-      placement="top"
       slotProps={{
         popper: {
           modifiers: [

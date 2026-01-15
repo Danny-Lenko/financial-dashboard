@@ -34,24 +34,26 @@ function Navigation() {
     <nav>
       <UnorderedList>
         {routes.map((route) => {
-          const listEl = (
-            <li key={route.navigationLabel}>
-              <NavigationLink
-                disabled={route.disabled}
-                component={NavLink}
-                to={route.path ?? '#'}
-                size="large"
-              >
-                {route.navigationLabel}
-              </NavigationLink>
-            </li>
+          const link = (
+            <NavigationLink
+              disabled={route.disabled}
+              component={NavLink}
+              to={route.path ?? '#'}
+              size="large"
+            >
+              {route.navigationLabel}
+            </NavigationLink>
           );
 
           if (route.disabled) {
-            return <DisabledElementTooltip>{listEl}</DisabledElementTooltip>;
+            return (
+              <li key={route.navigationLabel}>
+                <DisabledElementTooltip>{link}</DisabledElementTooltip>
+              </li>
+            );
           }
 
-          return listEl;
+          return <li key={route.navigationLabel}>{link}</li>;
         })}
       </UnorderedList>
     </nav>
