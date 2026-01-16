@@ -16,7 +16,10 @@ import {
   MonthGrid,
   YearSelector,
 } from '../styles/PeriodPicker.styles';
-import { selectActivePeriodInfo } from '../state/period.selectors';
+import {
+  selectActivePeriod,
+  selectIsYearlyPeriod,
+} from '../state/period.selectors';
 
 export const PeriodPicker = ({
   open,
@@ -24,22 +27,21 @@ export const PeriodPicker = ({
   onClose,
   onSelect,
 }: MonthYearPickerProps) => {
-  const periodInfo = useAppSelector(selectActivePeriodInfo);
+  const activePeriod = useAppSelector(selectActivePeriod);
+  const isYearlyPeriod = useAppSelector(selectIsYearlyPeriod);
   const startPeriod = useAppSelector(selectCashflowStartPeriod);
 
-  const initialYear =
-    periodInfo.type === 'month' ? periodInfo.year : CURRENT_YEAR;
-
+  const initialYear = !isYearlyPeriod ? activePeriod.year : CURRENT_YEAR;
   const [selectedYear, setSelectedYear] = useState(initialYear);
 
   useEffect(() => {
-    if (open && periodInfo.type === 'month') {
-      setSelectedYear(periodInfo.year);
+    if (open && !isYearlyPeriod) {
+      setSelectedYear(activePeriod.year);
     }
-  }, [open, periodInfo]);
+  }, [open, activePeriod, isYearlyPeriod]);
 
   const handleMonthSelect = (monthIndex: number) => {
-    onSelect(selectedYear, monthIndex);
+    onSelect(JSON.stringify({ year: selectedYear, month: monthIndex }));
     onClose();
   };
 
@@ -93,9 +95,9 @@ export const PeriodPicker = ({
         <MonthGrid>
           {MONTHS.map((month, index) => {
             const isSelected =
-              periodInfo.type === 'month' &&
-              selectedYear === periodInfo.year &&
-              index === periodInfo.month;
+              !isYearlyPeriod &&
+              selectedYear === activePeriod.year &&
+              index === activePeriod.month;
             const isDisabled = isMonthDisabled(index);
 
             return (

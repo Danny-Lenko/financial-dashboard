@@ -1,27 +1,16 @@
 import { createSlice } from '@reduxjs/toolkit';
-import type { PayloadAction } from '@reduxjs/toolkit';
-import type {
-  CashflowData,
-  MonthCashflow,
-} from '@/features/cashflow/types/cashflow.types';
-import type {
-  ExpensesData,
-  MonthExpenses,
-} from '@/features/expenses/types/expenses.types';
-import { generateTwoYearsData } from '@/features/data/utils/mock-data-generators.utils';
-import type { TransactionsData } from '@/features/transactions/types/transaction.types';
 
-interface DataState {
-  cashflow: CashflowData;
-  expenses: ExpensesData;
-  transactions: TransactionsData;
-  isInitialized: boolean;
-}
+import { generateBalancedTransactions } from '../utils/mock-transactions-generator.utils';
+import type { DataState } from '../types/initialData.types';
+
+const firstYearRecorded = 2023;
+const firstMonthRecorded = 6;
+const lastYearRecorded = 2025;
+const lastMonthRecorded = 6;
+const initialBalance = 5555;
 
 const initialState: DataState = {
-  cashflow: {},
-  expenses: {},
-  transactions: {},
+  initialTransactions: [],
   isInitialized: false,
 };
 
@@ -31,39 +20,35 @@ const dataSlice = createSlice({
   reducers: {
     initializeData(state) {
       if (!state.isInitialized) {
-        const data = generateTwoYearsData();
-        state.cashflow = data.cashflow;
-        state.expenses = data.expenses;
-        state.transactions = data.transactions;
+        const initialTransactions = generateBalancedTransactions(
+          firstYearRecorded,
+          firstMonthRecorded,
+          lastYearRecorded,
+          lastMonthRecorded,
+          initialBalance
+        );
+
+        state.initialTransactions = initialTransactions;
         state.isInitialized = true;
       }
     },
 
-    updateCashflow(
-      state,
-      action: PayloadAction<{ key: string; data: MonthCashflow }>
-    ) {
-      const { key, data } = action.payload;
-      state.cashflow[key] = data;
-    },
+    // updateCashflow(
+    //   state,
+    //   action: PayloadAction<{ key: string; data: MonthCashflow }>
+    // ) {
+    //   const { key, data } = action.payload;
+    //   state.cashflow[key] = data;
+    // },
 
-    updateExpenses(
-      state,
-      action: PayloadAction<{ key: string; data: MonthExpenses }>
-    ) {
-      const { key, data } = action.payload;
-      state.expenses[key] = data;
-    },
-
-    resetData(state) {
-      const data = generateTwoYearsData();
-      state.cashflow = data.cashflow;
-      state.expenses = data.expenses;
-      state.isInitialized = true;
-    },
+    // resetData(state) {
+    //   const data = generateTwoYearsData();
+    //   state.cashflow = data.cashflow;
+    //   state.expenses = data.expenses;
+    //   state.isInitialized = true;
+    // },
   },
 });
 
-export const { initializeData, updateCashflow, updateExpenses } =
-  dataSlice.actions;
+export const { initializeData } = dataSlice.actions;
 export default dataSlice.reducer;

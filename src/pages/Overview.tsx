@@ -11,7 +11,7 @@ function Overview() {
     <>
       <HelloAndPeriodSection />
       <CashflowSection />
-      <AddRecordingSection />
+      {/* <AddRecordingSection />
       <Grid container spacing={2} marginTop={4} alignItems="flex-start">
         <Grid component="section" size={{ xs: 12, md: 4 }}>
           <ExpensesSection />
@@ -19,7 +19,7 @@ function Overview() {
         <Grid component="section" size={{ xs: 12, md: 8 }}>
           <LastTransactionSection />
         </Grid>
-      </Grid>
+      </Grid> */}
     </>
   );
 }
