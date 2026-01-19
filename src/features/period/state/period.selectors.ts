@@ -17,7 +17,7 @@ export const selectActivePeriod = createSelector(
 export const selectPreviousPeriod = createSelector(
   [selectActivePeriod],
   ({ year, month }) => {
-    if (!month) {
+    if (month === null) {
       return { year: year - 1, month: null };
     }
 

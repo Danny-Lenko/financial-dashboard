@@ -35,7 +35,7 @@ const dataSlice = createSlice({
 
     // updateCashflow(
     //   state,
-    //   action: PayloadAction<{ key: string; data: MonthCashflow }>
+    //   action: PayloadAction<{ key: string; data:  }>
     // ) {
     //   const { key, data } = action.payload;
     //   state.cashflow[key] = data;

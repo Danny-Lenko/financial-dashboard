@@ -1,9 +1,14 @@
 import { v4 as uuidv4 } from 'uuid';
-import type { InitialTransaction } from '../types/initialData.types';
+import type {
+  InitialMonthlyBudget,
+  InitialTransaction,
+} from '../types/initialData.types';
 import {
   EXPENSE_SOURCES,
   INCOME_SOURCES,
 } from '../../transactions/constants/last-transactions.constants';
+
+export const INITIAL_BALANCE = 5000;
 
 // Lorem ipsum generator
 function generateDescription(): string {
@@ -42,25 +47,15 @@ const BIG_PURCHASES = [
   },
 ];
 
-export interface MonthlyBudget {
-  year: number;
-  month: number;
-  transactions: InitialTransaction[];
-  // startingBalance: number;
-  // totalIncome?: number;
-  // totalExpenses?: number;
-  // endingBalance: number;
-}
-
 // Generates balanced transactions
 export function generateBalancedTransactions(
   startYear: number,
   startMonth: number,
   endYear: number,
   endMonth: number,
-  initialBalance: number = 5000
-): MonthlyBudget[] {
-  const results: MonthlyBudget[] = [];
+  initialBalance: number = INITIAL_BALANCE
+): InitialMonthlyBudget[] {
+  const results: InitialMonthlyBudget[] = [];
   let currentBalance = initialBalance;
 
   // Calculate total months for trend purposes

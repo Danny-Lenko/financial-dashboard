@@ -7,32 +7,49 @@ export const CashflowCategory = {
 export type CashflowCategory =
   (typeof CashflowCategory)[keyof typeof CashflowCategory];
 
-export interface MonthCashflow {
+export interface BaseCashflow {
+  year: number;
   incomes: number;
   expenses: number;
+  balance: number;
+  transactionCount: number;
 }
 
-export interface CashflowData {
-  [key: string]: MonthCashflow;
+export interface MonthlyCashflow extends BaseCashflow {
+  month: number;
 }
 
-export interface CashflowMetrics {
-  amount: number;
-  trend: number;
-}
-
-export interface CashflowAnalysis {
-  balance: CashflowMetrics;
-  incomes: CashflowMetrics;
-  expenses: CashflowMetrics;
-}
-
-export interface YearGroups {
-  [year: string]: MonthCashflow[];
-}
-
-export interface YearlyTotals {
-  totalIncome: number;
+export interface YearlyCashflow extends BaseCashflow {
+  month: null;
+  totalIncomes: number;
   totalExpenses: number;
-  totalSavings: number;
+  finalBalance: number;
+  monthCount: number;
 }
+
+export interface CashflowTrend {
+  incomes: {
+    current: number;
+    previous: number;
+    change: number;
+    changePercent: number;
+  };
+  expenses: {
+    current: number;
+    previous: number;
+    change: number;
+    changePercent: number;
+  };
+  balance: {
+    current: number;
+    previous: number;
+    change: number;
+    changePercent: number;
+  };
+}
+
+export type PeriodCashflow = MonthlyCashflow | YearlyCashflow;
+
+export type CashflowWithTrend = PeriodCashflow & {
+  trend: CashflowTrend | null;
+};

@@ -8,7 +8,7 @@ import { formatCurrency } from '@/shared/utils/formatters/currency.utils';
 import TrendChip from '@/components/common/AppChip/AppChip';
 import Paper from '@/components/common/Paper/Paper';
 import { useAppSelector } from '@/store/hooks';
-import { selectActiveYearCashflow } from '../state/cashflow.selectors';
+import { selectIsYearlyPeriod } from '@/features/period/state/period.selectors';
 
 function CashflowCard({
   category,
@@ -23,7 +23,7 @@ function CashflowCard({
 
   const h2Content = formatCurrency(amount);
 
-  const isYearlyPeriod = useAppSelector(selectActiveYearCashflow) !== null;
+  const isYearlyPeriod = useAppSelector(selectIsYearlyPeriod);
   const chipLabel = isYearlyPeriod ? 'Average' : trend.toFixed(1) + '%';
 
   const chipIcon = isYearlyPeriod ? undefined : trend >= 0 ? (
