@@ -14,9 +14,7 @@ const Section = styled('section')(({ theme }) => ({
 }));
 
 function CashflowSection() {
-  const stats = useAppSelector(selectActivePeriodCashflowWithTrend)!;
-
-  console.log('CashflowSection stats:', stats);
+  const stats = useAppSelector(selectActivePeriodCashflowWithTrend);
 
   return (
     <Section>
@@ -25,7 +23,7 @@ function CashflowSection() {
           key={category}
           category={category}
           amount={stats[category]}
-          trend={stats.trend ? stats.trend[category].changePercent : 0}
+          trend={stats.trend ? stats.trend[category] : 0}
         />
       ))}
     </Section>

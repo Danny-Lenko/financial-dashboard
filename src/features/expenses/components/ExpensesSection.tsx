@@ -6,10 +6,18 @@ import Paper from '@/components/common/Paper/Paper';
 import { useAppSelector } from '@/store/hooks';
 import { selectActivePeriodExpenses } from '../state/expenses.selectors';
 import AppChip from '@/components/common/AppChip/AppChip';
-
-// TODO: PIE CHART GOES BEYOND THE CONTAINER BOUNDS ON SOME RESOLUTIONS - FIX IT
+import {
+  selectActivePeriodCashflow,
+  selectActivePeriodCashflowWithTrend,
+  selectAllPeriodsCashflows,
+  selectPreviousPeriodCashflow,
+} from '../../cashflow/state/cashflow.selectors';
 
 function ExpensesSection() {
+  const cashflow = useAppSelector(selectActivePeriodCashflowWithTrend);
+
+  console.log('Cashflow with trend:', cashflow);
+
   const expensesData = useAppSelector(selectActivePeriodExpenses);
 
   if (!expensesData) {

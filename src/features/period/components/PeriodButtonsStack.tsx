@@ -10,8 +10,7 @@ import { usePeriodSelection } from '../hooks/usePeriodSelection.hook';
 
 function PeriodButtonsStack() {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-  const { activePeriod, isPresetPeriod, pickPeriod, isYearlyPeriod } =
-    usePeriodSelection();
+  const { activePeriod, isPresetPeriod, pickPeriod } = usePeriodSelection();
 
   const handlePeriodChange = (
     _event: React.MouseEvent<HTMLElement>,
@@ -27,8 +26,8 @@ function PeriodButtonsStack() {
       return 'Select period';
     }
 
-    if (!isYearlyPeriod) {
-      return `${MONTHS[activePeriod.month].slice(0, 3)}, ${activePeriod.year}`;
+    if (activePeriod.type === 'month') {
+      return `${MONTHS[activePeriod.month!].slice(0, 3)}, ${activePeriod.year}`;
     }
 
     return `${activePeriod.year}`;
@@ -37,7 +36,10 @@ function PeriodButtonsStack() {
   return (
     <Stack direction="row" spacing={2}>
       <ToggleButtonGroup
-        value={JSON.stringify(activePeriod)}
+        value={JSON.stringify({
+          year: activePeriod.year,
+          month: activePeriod.month,
+        })}
         exclusive
         onChange={handlePeriodChange}
         aria-label="period selection"

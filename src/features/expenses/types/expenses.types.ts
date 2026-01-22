@@ -16,6 +16,13 @@ export interface Expense {
   amount: number;
   percentage: number;
 }
+export interface CategoryStats {
+  id: string;
+  name: string;
+  amount: number;
+  percentage: number;
+  totalAmount: number;
+}
 
 export interface MonthExpenses {
   total: number;
@@ -25,14 +32,6 @@ export interface MonthExpenses {
 
 export interface ExpensesData {
   [key: string]: MonthExpenses;
-}
-
-export interface CategoryStats {
-  id: string;
-  name: string;
-  amount: number;
-  percentage: number;
-  totalAmount: number;
 }
 
 export interface YearExpenses {
@@ -54,16 +53,16 @@ export interface CategoryGroup {
   percentages: number[];
 }
 
-interface ExpenseCategoryConfig {
-  id: string;
-  name: ExpenseCategory;
-  basePercentage: number;
-}
-export const EXPENSE_CATEGORIES_CONFIG: ExpenseCategoryConfig[] = [
-  { id: '1', name: ExpenseCategory.House, basePercentage: 40 },
-  { id: '2', name: ExpenseCategory.Charges, basePercentage: 20 },
-  { id: '3', name: ExpenseCategory.Transportation, basePercentage: 13 },
-  { id: '4', name: ExpenseCategory.Groceries, basePercentage: 10 },
-  { id: '5', name: ExpenseCategory.Entertainment, basePercentage: 7 },
-  { id: '6', name: ExpenseCategory.Shopping, basePercentage: 10 },
-];
+// interface ExpenseCategoryConfig {
+//   id: string;
+//   name: ExpenseCategory;
+//   basePercentage: number;
+// }
+// export const EXPENSE_CATEGORIES_CONFIG: ExpenseCategoryConfig[] = [
+//   { id: '1', name: ExpenseCategory.House, basePercentage: 40 },
+//   { id: '2', name: ExpenseCategory.Charges, basePercentage: 20 },
+//   { id: '3', name: ExpenseCategory.Transportation, basePercentage: 13 },
+//   { id: '4', name: ExpenseCategory.Groceries, basePercentage: 10 },
+//   { id: '5', name: ExpenseCategory.Entertainment, basePercentage: 7 },
+//   { id: '6', name: ExpenseCategory.Shopping, basePercentage: 10 },
+// ];

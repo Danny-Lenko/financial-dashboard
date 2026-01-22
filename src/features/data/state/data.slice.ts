@@ -32,21 +32,6 @@ const dataSlice = createSlice({
         state.isInitialized = true;
       }
     },
-
-    // updateCashflow(
-    //   state,
-    //   action: PayloadAction<{ key: string; data:  }>
-    // ) {
-    //   const { key, data } = action.payload;
-    //   state.cashflow[key] = data;
-    // },
-
-    // resetData(state) {
-    //   const data = generateTwoYearsData();
-    //   state.cashflow = data.cashflow;
-    //   state.expenses = data.expenses;
-    //   state.isInitialized = true;
-    // },
   },
 });
 

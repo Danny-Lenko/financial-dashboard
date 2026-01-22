@@ -1,16 +1,13 @@
 import { useCallback } from 'react';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { setActivePeriod } from '../state/period.slice';
-import {
-  selectActivePeriod,
-  selectIsYearlyPeriod,
-} from '../state/period.selectors';
+import { selectActivePeriod } from '../state/period.selectors';
 import { PERIOD_VALUES } from '../constants/periods.constants';
+import type { Period } from '../types/period.types';
 
 export const usePeriodSelection = () => {
   const dispatch = useAppDispatch();
   const activePeriod = useAppSelector(selectActivePeriod);
-  const isYearlyPeriod = useAppSelector(selectIsYearlyPeriod);
 
   const pickPeriod = useCallback(
     (period: string) => {
@@ -19,10 +16,8 @@ export const usePeriodSelection = () => {
     [dispatch]
   );
 
-  const isSamePeriod = (
-    a: { year: number; month: number | null },
-    b: { year: number; month: number }
-  ) => a.year === b.year && a.month === b.month;
+  const isSamePeriod = (a: Period, b: Period) =>
+    a.year === b.year && a.month === b.month;
 
   const isPresetPeriod = Object.values(PERIOD_VALUES).some((period) =>
     isSamePeriod(period, activePeriod)
@@ -32,6 +27,5 @@ export const usePeriodSelection = () => {
     activePeriod,
     isPresetPeriod,
     pickPeriod,
-    isYearlyPeriod,
   };
 };

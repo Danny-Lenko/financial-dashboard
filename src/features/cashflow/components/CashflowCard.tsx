@@ -8,7 +8,7 @@ import { formatCurrency } from '@/shared/utils/formatters/currency.utils';
 import TrendChip from '@/components/common/AppChip/AppChip';
 import Paper from '@/components/common/Paper/Paper';
 import { useAppSelector } from '@/store/hooks';
-import { selectIsYearlyPeriod } from '@/features/period/state/period.selectors';
+import { selectActivePeriod } from '@/features/period/state/period.selectors';
 
 function CashflowCard({
   category,
@@ -20,13 +20,13 @@ function CashflowCard({
   trend: number;
 }) {
   const { title, amountColor } = CASHFLOW_CATEGORY_CONFIG[category];
+  const activePeriod = useAppSelector(selectActivePeriod);
 
   const h2Content = formatCurrency(amount);
 
-  const isYearlyPeriod = useAppSelector(selectIsYearlyPeriod);
-  const chipLabel = isYearlyPeriod ? 'Average' : trend.toFixed(1) + '%';
+  const chipLabel = activePeriod.isYearly ? 'Average' : trend.toFixed(1) + '%';
 
-  const chipIcon = isYearlyPeriod ? undefined : trend >= 0 ? (
+  const chipIcon = activePeriod.isYearly ? undefined : trend >= 0 ? (
     <ArrowUpwardIcon color="success" />
   ) : (
     <ArrowDownwardIcon color="error" />
@@ -47,7 +47,7 @@ function CashflowCard({
         </Typography>
         <TrendChip
           icon={chipIcon}
-          label={isYearlyPeriod ? 'Average' : chipLabel}
+          label={activePeriod.isYearly ? 'Average' : chipLabel}
         />
       </Stack>
     </Paper>
