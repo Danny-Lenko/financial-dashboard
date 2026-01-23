@@ -12,12 +12,17 @@ import {
 } from '../styles/LastTransactionsTable.styles';
 import TableMenu from './TableMenu';
 import { useAppSelector } from '@/store/hooks';
-import { selectActivePeriodTransactions } from '../state/transactions.selectors';
+import { selectActivePeriodLastTransactions } from '../state/transactions.selectors';
+import { selectInitialTransactions } from '@/features/data/state/data.selectors';
 
 function LastTransactionsTable() {
-  const reduxData = useAppSelector(selectActivePeriodTransactions);
+  const data = useAppSelector(selectActivePeriodLastTransactions);
 
-  const data = reduxData && reduxData.slice(0, 7);
+  const initialTransactions = useAppSelector(selectInitialTransactions);
+
+  console.log('Initial Transactions:', initialTransactions);
+
+  const transactions = data && data.slice(0, 7);
 
   return (
     <TableWrapper>
@@ -30,7 +35,7 @@ function LastTransactionsTable() {
           </TR>
         </THead>
         <TableBody>
-          {data.map((transaction) => (
+          {transactions.map((transaction) => (
             <TR key={transaction.id}>
               {TABLE_COLUMNS_CONFIG.map((column) => {
                 if (column.id === 'menu') {

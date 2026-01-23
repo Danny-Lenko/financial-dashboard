@@ -17,7 +17,7 @@ function Overview() {
           <ExpensesSection />
         </Grid>
         <Grid component="section" size={{ xs: 12, md: 8 }}>
-          {/* <LastTransactionSection /> */}
+          <LastTransactionSection />
         </Grid>
       </Grid>
     </>
