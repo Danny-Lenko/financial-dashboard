@@ -4,12 +4,10 @@ import {
   selectActivePeriod,
   selectPreviousPeriod,
 } from '@/features/period/state/period.selectors';
-import {
-  // selectCashflowData,
-  selectInitialTransactions,
-} from '@/features/data/state/data.selectors';
+import { selectInitialTransactions } from '@/features/data/state/data.selectors';
 import type { Cashflow, CashflowTrend } from '../types/cashflow.types';
-import { INITIAL_BALANCE } from '@/features/data/utils/mock-transactions-generator.utils';
+
+import { INITIAL_BALANCE } from '@/features/data/consts/data.consts';
 import {
   calculateAllMonthsCashflows,
   calculateTrend,

@@ -13,14 +13,9 @@ import {
 import TableMenu from './TableMenu';
 import { useAppSelector } from '@/store/hooks';
 import { selectActivePeriodLastTransactions } from '../state/transactions.selectors';
-import { selectInitialTransactions } from '@/features/data/state/data.selectors';
 
 function LastTransactionsTable() {
   const data = useAppSelector(selectActivePeriodLastTransactions);
-
-  const initialTransactions = useAppSelector(selectInitialTransactions);
-
-  console.log('Initial Transactions:', initialTransactions);
 
   const transactions = data && data.slice(0, 7);
 

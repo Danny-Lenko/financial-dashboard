@@ -1,13 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { generateBalancedTransactions } from '../utils/mock-transactions-generator.utils';
-import type { DataState } from '../types/initialData.types';
+import type {
+  DataState,
+  InitialMonthlyBudget,
+} from '../types/initialData.types';
 
-const firstYearRecorded = 2023;
-const firstMonthRecorded = 6;
-const lastYearRecorded = 2025;
-const lastMonthRecorded = 6;
-const initialBalance = 5555;
+import initialTransactions from '../mocks/initial-transactions.json';
 
 const initialState: DataState = {
   initialTransactions: [],
@@ -20,15 +18,8 @@ const dataSlice = createSlice({
   reducers: {
     initializeData(state) {
       if (!state.isInitialized) {
-        const initialTransactions = generateBalancedTransactions(
-          firstYearRecorded,
-          firstMonthRecorded,
-          lastYearRecorded,
-          lastMonthRecorded,
-          initialBalance
-        );
-
-        state.initialTransactions = initialTransactions;
+        state.initialTransactions =
+          initialTransactions as InitialMonthlyBudget[];
         state.isInitialized = true;
       }
     },
