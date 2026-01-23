@@ -20,17 +20,17 @@ function CashflowCard({
   trend: number;
 }) {
   const { title, amountColor } = CASHFLOW_CATEGORY_CONFIG[category];
-  const activePeriod = useAppSelector(selectActivePeriod);
+  const { type } = useAppSelector(selectActivePeriod);
 
   const h2Content = formatCurrency(amount);
 
-  const chipLabel = activePeriod.isYearly ? 'Average' : trend.toFixed(1) + '%';
-
-  const chipIcon = activePeriod.isYearly ? undefined : trend >= 0 ? (
-    <ArrowUpwardIcon color="success" />
-  ) : (
-    <ArrowDownwardIcon color="error" />
-  );
+  const chipLabel = type === 'year' ? 'Average' : trend.toFixed(1) + '%';
+  const chipIcon =
+    type === 'year' ? undefined : trend >= 0 ? (
+      <ArrowUpwardIcon color="success" />
+    ) : (
+      <ArrowDownwardIcon color="error" />
+    );
 
   return (
     <Paper padding={[2, 3]} elevation={1}>
@@ -47,7 +47,7 @@ function CashflowCard({
         </Typography>
         <TrendChip
           icon={chipIcon}
-          label={activePeriod.isYearly ? 'Average' : chipLabel}
+          label={type === 'year' ? 'Average' : chipLabel}
         />
       </Stack>
     </Paper>

@@ -14,7 +14,7 @@ function Overview() {
       <AddRecordingSection />
       <Grid container spacing={2} marginTop={4} alignItems="flex-start">
         <Grid component="section" size={{ xs: 12, md: 4 }}>
-          {/* <ExpensesSection /> */}
+          <ExpensesSection />
         </Grid>
         <Grid component="section" size={{ xs: 12, md: 8 }}>
           {/* <LastTransactionSection /> */}

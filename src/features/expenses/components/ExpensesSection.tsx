@@ -1,32 +1,22 @@
 import { Stack, Typography } from '@mui/material';
 
-import { EXPENSES_CONFIG } from '@/features/expenses/constants/expenses.constants';
+import { EXPENSE_CATEGORIES_CONFIG } from '@/features/expenses/constants/expenses.constants';
 import PieChart from './PieChart';
 import Paper from '@/components/common/Paper/Paper';
 import { useAppSelector } from '@/store/hooks';
 import { selectActivePeriodExpenses } from '../state/expenses.selectors';
 import AppChip from '@/components/common/AppChip/AppChip';
-import {
-  selectActivePeriodCashflow,
-  selectActivePeriodCashflowWithTrend,
-  selectAllPeriodsCashflows,
-  selectPreviousPeriodCashflow,
-} from '../../cashflow/state/cashflow.selectors';
+import { selectActivePeriod } from '@/features/period/state/period.selectors';
 
 function ExpensesSection() {
-  const cashflow = useAppSelector(selectActivePeriodCashflowWithTrend);
+  const activePeriod = useAppSelector(selectActivePeriod);
+  const activePeriodExpenses = useAppSelector(selectActivePeriodExpenses);
 
-  console.log('Cashflow with trend:', cashflow);
-
-  const expensesData = useAppSelector(selectActivePeriodExpenses);
-
-  if (!expensesData) {
+  if (!activePeriodExpenses) {
     return null;
   }
 
-  const isYearlyStats = 'year' in expensesData;
-
-  const pieChartData = expensesData.categories.map((category) => ({
+  const pieChartData = activePeriodExpenses.categories.map((category) => ({
     name: category.name,
     amount: category.amount,
   }));
@@ -47,7 +37,7 @@ function ExpensesSection() {
           >
             Expenses by category
           </Typography>
-          {isYearlyStats && (
+          {activePeriod.type === 'year' && (
             <AppChip
               sx={{ marginLeft: 'auto', display: 'inline' }}
               label="Average"
@@ -57,10 +47,10 @@ function ExpensesSection() {
 
         <PieChart data={pieChartData} />
 
-        {EXPENSES_CONFIG.map((expense) => {
-          const { percentage } = expensesData.categories.find(
-            (expensesData) => expensesData.name === expense.name
-          )!;
+        {activePeriodExpenses.categories.map((expense) => {
+          const Icon = EXPENSE_CATEGORIES_CONFIG.find(
+            (cat) => cat.name === expense.name
+          )!.icon;
 
           return (
             <Stack
@@ -72,7 +62,7 @@ function ExpensesSection() {
               borderBottom={1}
               borderColor="divider"
             >
-              <expense.icon />
+              <Icon />
               <Typography
                 variant="body2"
                 color="text.primary"
@@ -86,7 +76,7 @@ function ExpensesSection() {
                 color="text.secondary"
                 marginLeft="auto"
               >
-                {percentage.toFixed(2)}%
+                {expense.percentage.toFixed(2)}%
               </Typography>
             </Stack>
           );
