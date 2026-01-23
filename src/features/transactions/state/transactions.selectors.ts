@@ -1,40 +1,29 @@
 import { createSelector } from '@reduxjs/toolkit';
-
-import { parseMonthKey } from '@/shared/utils/parseMonthKey.utils';
+import type { InitialTransaction } from '@/features/data/types/initialData.types';
+import { selectInitialTransactions } from '@/features/data/state/data.selectors';
 import { selectActivePeriod } from '@/features/period/state/period.selectors';
-import { selectTransactionsData } from '@/features/data/state/data.selectors';
-import type { Transaction } from '../types/transaction.types';
 
-export const selectActiveMonthTransactions = createSelector(
-  [selectTransactionsData, selectActivePeriod],
-  (transactionsData, currentKey) => transactionsData[currentKey] || null
-);
+const LAST_TRANSACTIONS_LIMIT = 7;
 
-export const selectActiveYearLastTransactions = createSelector(
-  [selectTransactionsData, selectActivePeriod],
-  (transactionsData, selectedYear): Transaction[] | null => {
-    if (typeof selectedYear !== 'number') return null;
+export const selectActivePeriodLastTransactions = createSelector(
+  [selectInitialTransactions, selectActivePeriod],
+  (monthlyData, { year, month, type }): InitialTransaction[] => {
+    if (type === 'year') {
+      const yearTransactions = monthlyData
+        .filter((m) => m.year === year)
+        .flatMap((m) => m.transactions);
 
-    const yearMonthKeys = Object.keys(transactionsData)
-      .filter((key) => {
-        const parsed = parseMonthKey(key);
-        return parsed && parsed.year === selectedYear;
-      })
-      .sort();
+      return yearTransactions
+        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+        .slice(0, LAST_TRANSACTIONS_LIMIT);
+    }
 
-    if (yearMonthKeys.length === 0) return null;
+    const found = monthlyData.find((m) => m.year === year && m.month === month);
 
-    const lastMonthKey = yearMonthKeys[yearMonthKeys.length - 1];
-    const lastMonthTransactions = transactionsData[lastMonthKey];
+    if (!found) return [];
 
-    if (!lastMonthTransactions) return null;
-
-    return lastMonthTransactions.slice(0, 20);
+    return [...found.transactions]
+      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+      .slice(0, LAST_TRANSACTIONS_LIMIT);
   }
-);
-
-export const selectActivePeriodTransactions = createSelector(
-  [selectActiveMonthTransactions, selectActiveYearLastTransactions],
-  (monthlyTransactions, yearlyTransactions) =>
-    monthlyTransactions || yearlyTransactions || null
 );

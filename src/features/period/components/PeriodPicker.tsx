@@ -9,14 +9,16 @@ import {
   CURRENT_MONTH,
   CURRENT_YEAR,
 } from '@/shared/constants/current-period.constants';
-import { selectCashflowStartPeriod } from '@/features/cashflow/state/cashflow.selectors';
 import type { MonthYearPickerProps } from '../types/period.types';
 import {
   Container,
   MonthGrid,
   YearSelector,
 } from '../styles/PeriodPicker.styles';
-import { selectActivePeriodInfo } from '../state/period.selectors';
+import {
+  selectActivePeriod,
+  selectStartingPeriod,
+} from '../state/period.selectors';
 
 export const PeriodPicker = ({
   open,
@@ -24,22 +26,20 @@ export const PeriodPicker = ({
   onClose,
   onSelect,
 }: MonthYearPickerProps) => {
-  const periodInfo = useAppSelector(selectActivePeriodInfo);
-  const startPeriod = useAppSelector(selectCashflowStartPeriod);
+  const activePeriod = useAppSelector(selectActivePeriod);
+  const startingPeriod = useAppSelector(selectStartingPeriod);
 
-  const initialYear =
-    periodInfo.type === 'month' ? periodInfo.year : CURRENT_YEAR;
-
+  const initialYear = !activePeriod.isYearly ? activePeriod.year : CURRENT_YEAR;
   const [selectedYear, setSelectedYear] = useState(initialYear);
 
   useEffect(() => {
-    if (open && periodInfo.type === 'month') {
-      setSelectedYear(periodInfo.year);
+    if (open && !activePeriod.isYearly) {
+      setSelectedYear(activePeriod.year);
     }
-  }, [open, periodInfo]);
+  }, [open, activePeriod]);
 
   const handleMonthSelect = (monthIndex: number) => {
-    onSelect(selectedYear, monthIndex);
+    onSelect(JSON.stringify({ year: selectedYear, month: monthIndex }));
     onClose();
   };
 
@@ -49,7 +49,10 @@ export const PeriodPicker = ({
       return true;
     }
     // Disable months before data start period
-    if (selectedYear === startPeriod.year && monthIndex < startPeriod.month) {
+    if (
+      selectedYear === startingPeriod.year &&
+      monthIndex < startingPeriod.month
+    ) {
       return true;
     }
     // Disable all months if year is in the future
@@ -72,7 +75,7 @@ export const PeriodPicker = ({
           <IconButton
             size="small"
             onClick={() => setSelectedYear(selectedYear - 1)}
-            disabled={selectedYear <= startPeriod.year} // Min year
+            disabled={selectedYear <= startingPeriod.year} // Min year
           >
             <ChevronLeft />
           </IconButton>
@@ -93,9 +96,9 @@ export const PeriodPicker = ({
         <MonthGrid>
           {MONTHS.map((month, index) => {
             const isSelected =
-              periodInfo.type === 'month' &&
-              selectedYear === periodInfo.year &&
-              index === periodInfo.month;
+              !activePeriod.isYearly &&
+              selectedYear === activePeriod.year &&
+              index === activePeriod.month;
             const isDisabled = isMonthDisabled(index);
 
             return (

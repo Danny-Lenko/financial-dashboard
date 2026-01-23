@@ -1,17 +1,29 @@
+export type PeriodType = 'month' | 'year';
+
 export interface PeriodState {
-  activePeriod: string | number;
+  activeMonth: number;
+  activeYear: number;
+}
+
+export interface Period {
+  month: number | null;
+  year: number;
+}
+
+export interface PeriodWithType extends Period {
+  type: PeriodType;
 }
 
 export interface MonthYearPickerProps {
   open: boolean;
   anchorEl: HTMLElement | null;
   onClose: () => void;
-  onSelect: (year: number, month: number) => void;
+  onSelect: (period: string) => void;
 }
 
 export interface PeriodButtonConfig {
   name: string;
-  value: string | number;
+  value: Period;
   label: string;
   isStandalone?: boolean;
 }

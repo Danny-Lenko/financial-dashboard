@@ -1,40 +1,53 @@
 import type { RootState } from '@/store/store';
 import { createSelector } from '@reduxjs/toolkit';
 
-import {
-  getPreviousMonth,
-  getMonthKey,
-} from '@/features/period/utils/period.utils';
-import { parseMonthKey } from '@/shared/utils/parseMonthKey.utils';
+import { getPreviousMonth } from '@/features/period/utils/period.utils';
+import { selectInitialTransactions } from '../../data/state/data.selectors';
+import type { Period, PeriodWithType } from '../types/period.types';
 
-export const selectActivePeriod = (state: RootState) =>
-  state.period.activePeriod;
+export const selectActiveMonth = (state: RootState) => state.period.activeMonth;
+export const selectActiveYear = (state: RootState) => state.period.activeYear;
+
+export const selectActivePeriod = createSelector(
+  [selectActiveYear, selectActiveMonth],
+  (year, month): PeriodWithType => ({
+    year,
+    month,
+    type: month === null ? 'year' : 'month',
+  })
+);
 
 export const selectPreviousPeriod = createSelector(
   [selectActivePeriod],
-  (activePeriod) => {
-    if (typeof activePeriod === 'number') {
-      return activePeriod - 1;
+  ({ year, month, type }): PeriodWithType => {
+    if (type === 'year') {
+      return { year: year - 1, month: null, type: 'year' };
     }
 
-    const { year, month } = parseMonthKey(activePeriod);
-    const prev = getPreviousMonth(year, month);
-    return getMonthKey(prev.year, prev.month);
+    const { year: prevYear, month: prevMonth } = getPreviousMonth(year, month!);
+
+    return {
+      year: prevYear,
+      month: prevMonth,
+      type: 'month',
+    };
   }
 );
-export const selectIsYearlyPeriod = createSelector(
-  [selectActivePeriod],
-  (activePeriod) => typeof activePeriod === 'number'
-);
 
-export const selectActivePeriodInfo = createSelector(
-  [selectActivePeriod],
-  (activePeriod) => {
-    if (typeof activePeriod === 'number') {
-      return { type: 'year' as const, year: activePeriod };
+export const selectStartingPeriod = createSelector(
+  [selectInitialTransactions],
+  (monthlyData): Period => {
+    if (monthlyData.length === 0) {
+      const currentDate = new Date();
+      return { year: currentDate.getFullYear(), month: currentDate.getMonth() };
     }
 
-    const { year, month } = parseMonthKey(activePeriod);
-    return { type: 'month' as const, year, month };
+    const sorted = [...monthlyData].sort((a, b) => {
+      if (a.year !== b.year) return a.year - b.year;
+      return a.month - b.month;
+    });
+
+    const first = sorted[0];
+    return { year: first.year, month: first.month };
   }
 );

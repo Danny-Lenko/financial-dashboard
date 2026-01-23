@@ -10,17 +10,11 @@ import { usePeriodSelection } from '../hooks/usePeriodSelection.hook';
 
 function PeriodButtonsStack() {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-  const {
-    activePeriod,
-    periodInfo,
-    isPresetPeriod,
-    pickPeriod,
-    pickCustomPeriod,
-  } = usePeriodSelection();
+  const { activePeriod, isPresetPeriod, pickPeriod } = usePeriodSelection();
 
   const handlePeriodChange = (
     _event: React.MouseEvent<HTMLElement>,
-    newPeriod: string | number | null
+    newPeriod: string
   ) => {
     if (newPeriod !== null) {
       pickPeriod(newPeriod);
@@ -32,31 +26,36 @@ function PeriodButtonsStack() {
       return 'Select period';
     }
 
-    if (periodInfo.type === 'month') {
-      return `${MONTHS[periodInfo.month].slice(0, 3)}, ${periodInfo.year}`;
+    if (activePeriod.type === 'month') {
+      return `${MONTHS[activePeriod.month!].slice(0, 3)}, ${activePeriod.year}`;
     }
 
-    return `${periodInfo.year}`;
+    return `${activePeriod.year}`;
   };
 
   return (
     <Stack direction="row" spacing={2}>
       <ToggleButtonGroup
-        value={activePeriod}
+        value={JSON.stringify({
+          year: activePeriod.year,
+          month: activePeriod.month,
+        })}
         exclusive
         onChange={handlePeriodChange}
         aria-label="period selection"
       >
-        {PERIOD_BUTTONS_CONFIG.map((button) => (
-          <StyledExpandableButton
-            as={ToggleButton}
-            key={button.value}
-            aria-label={button.label.toLowerCase()}
-            value={button.value}
-          >
-            {button.label}
-          </StyledExpandableButton>
-        ))}
+        {PERIOD_BUTTONS_CONFIG.map((button) => {
+          return (
+            <StyledExpandableButton
+              as={ToggleButton}
+              key={button.name}
+              aria-label={button.label.toLowerCase()}
+              value={JSON.stringify(button.value)}
+            >
+              {button.label}
+            </StyledExpandableButton>
+          );
+        })}
       </ToggleButtonGroup>
 
       <>
@@ -75,7 +74,7 @@ function PeriodButtonsStack() {
           open={Boolean(anchorEl)}
           anchorEl={anchorEl}
           onClose={() => setAnchorEl(null)}
-          onSelect={pickCustomPeriod}
+          onSelect={pickPeriod}
         />
       </>
     </Stack>

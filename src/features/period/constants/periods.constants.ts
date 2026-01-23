@@ -2,16 +2,16 @@ import {
   CURRENT_MONTH,
   CURRENT_YEAR,
 } from '@/shared/constants/current-period.constants';
-import { getMonthKey, getPreviousMonth } from '../utils/period.utils';
+import { getPreviousMonth } from '../utils/period.utils';
 import type { PeriodButtonConfig } from '../types/period.types';
 
 const prevMonthInfo = getPreviousMonth(CURRENT_YEAR, CURRENT_MONTH);
 
 export const PERIOD_VALUES = {
-  THIS_MONTH: getMonthKey(CURRENT_YEAR, CURRENT_MONTH),
-  LAST_MONTH: getMonthKey(prevMonthInfo.year, prevMonthInfo.month),
-  THIS_YEAR: CURRENT_YEAR,
-  LAST_YEAR: CURRENT_YEAR - 1,
+  THIS_MONTH: { year: CURRENT_YEAR, month: CURRENT_MONTH },
+  LAST_MONTH: { year: prevMonthInfo.year, month: prevMonthInfo.month },
+  THIS_YEAR: { year: CURRENT_YEAR, month: null },
+  LAST_YEAR: { year: CURRENT_YEAR - 1, month: null },
 } as const;
 
 export const PERIOD_BUTTONS_CONFIG: PeriodButtonConfig[] = [

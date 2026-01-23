@@ -4,68 +4,62 @@ import {
   selectActivePeriod,
   selectPreviousPeriod,
 } from '@/features/period/state/period.selectors';
-import { selectCashflowData } from '@/features/data/state/data.selectors';
 import {
-  analyzeCashflow,
-  calculateYearStats,
-  groupMonthsByYear,
-} from '@/features/cashflow/utils/cashflow.utils';
+  // selectCashflowData,
+  selectInitialTransactions,
+} from '@/features/data/state/data.selectors';
+import type { Cashflow, CashflowTrend } from '../types/cashflow.types';
+import { INITIAL_BALANCE } from '@/features/data/utils/mock-transactions-generator.utils';
+import {
+  calculateAllMonthsCashflows,
+  calculateTrend,
+  getPeriodCashflow,
+} from '../utils/cashflow.utils';
 
-export const selectYearlyCashflowStats = createSelector(
-  [selectCashflowData],
-  (monthlyData) => {
-    const yearGroups = groupMonthsByYear(monthlyData);
+export const selectAllPeriodsCashflows = createSelector(
+  [selectInitialTransactions],
+  (monthlyData): Map<string, Cashflow> => {
+    const cashflows = new Map<string, Cashflow>();
+    let runningBalance = INITIAL_BALANCE;
 
-    return Object.entries(yearGroups)
-      .map(([year, months]) => calculateYearStats(year, months))
-      .sort((a, b) => b.year - a.year);
-  }
-);
+    const sorted = [...monthlyData].sort((a, b) => {
+      if (a.year !== b.year) return a.year - b.year;
+      return a.month - b.month;
+    });
 
-export const selectActiveMonthCashflow = createSelector(
-  [selectCashflowData, selectActivePeriod],
-  (cashflow, currentKey) => cashflow[currentKey] || null
-);
+    sorted.forEach(({ year, month, transactions }) => {
+      const cashflow = calculateAllMonthsCashflows(
+        transactions,
+        runningBalance
+      );
+      runningBalance = cashflow.balance;
 
-export const selectActiveYearCashflow = createSelector(
-  [selectYearlyCashflowStats, selectActivePeriod],
-  (yearlyAverages, selectedYear) => {
-    return yearlyAverages.find((item) => item.year === selectedYear) || null;
+      const key = `${year}-${month}`;
+      cashflows.set(key, cashflow);
+    });
+
+    return cashflows;
   }
 );
 
 export const selectActivePeriodCashflow = createSelector(
-  [selectActiveMonthCashflow, selectActiveYearCashflow],
-  (monthlyCashflow, yearlyCashflow) => monthlyCashflow || yearlyCashflow || null
-);
-
-export const selectPreviousMonthCashflow = createSelector(
-  [selectCashflowData, selectPreviousPeriod],
-  (cashflow, previousKey) => cashflow[previousKey] || null
-);
-
-export const selectPreviousYearCashflow = createSelector(
-  [selectYearlyCashflowStats, selectPreviousPeriod],
-  (yearlyAverages, selectedYear) => {
-    return yearlyAverages.find((item) => item.year === selectedYear) || null;
+  [selectAllPeriodsCashflows, selectActivePeriod],
+  (allCashflows, activePeriod): Cashflow => {
+    return getPeriodCashflow(allCashflows, activePeriod);
   }
 );
 
 export const selectPreviousPeriodCashflow = createSelector(
-  [selectPreviousMonthCashflow, selectPreviousYearCashflow],
-  (monthlyCashflow, yearlyCashflow) => monthlyCashflow || yearlyCashflow || null
-);
-
-export const selectCashflowStats = createSelector(
-  [selectActivePeriodCashflow, selectPreviousPeriodCashflow],
-  (current, previous) => analyzeCashflow({ previous, current })
-);
-
-export const selectCashflowStartPeriod = createSelector(
-  [selectYearlyCashflowStats],
-  (data) => {
-    const earliestYear = data[data.length - 1].year;
-    const earliestMonth = 12 - data[data.length - 1].monthCount;
-    return { year: earliestYear, month: earliestMonth };
+  [selectAllPeriodsCashflows, selectPreviousPeriod],
+  (allCashflows, activePeriod): Cashflow => {
+    return getPeriodCashflow(allCashflows, activePeriod);
   }
+);
+
+export const selectActivePeriodCashflowWithTrend = createSelector(
+  [selectActivePeriodCashflow, selectPreviousPeriodCashflow],
+  (current, previous): Cashflow & { trend: CashflowTrend } => ({
+    ...current,
+    trend: calculateTrend(current, previous),
+  })
 );

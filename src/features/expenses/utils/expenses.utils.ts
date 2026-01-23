@@ -1,16 +1,15 @@
-import { EXPENSES_CONFIG } from '@/features/expenses/constants/expenses.constants';
-import { parseMonthKey } from '@/shared/utils/parseMonthKey.utils';
+import { EXPENSE_CATEGORIES_CONFIG } from '@/features/expenses/constants/expenses.constants';
 import type { PaletteColor, Theme } from '@mui/material/styles';
 import type {
-  CategoryGroup,
   CategoryStats,
-  ExpensesData,
+  ExpenseCategory,
   MonthExpenses,
-  YearExpenses,
 } from '../types/expenses.types';
+import type { InitialTransaction } from '@/features/data/types/initialData.types';
+import type { PeriodWithType } from '@/features/period/types/period.types';
 
 export const getCategoryColor = (categoryName: string, theme: Theme) => {
-  const config = EXPENSES_CONFIG.find((c) => c.name === categoryName);
+  const config = EXPENSE_CATEGORIES_CONFIG.find((c) => c.name === categoryName);
   if (!config) return '#cccccc';
 
   const palette = config.color.split('.')[0] as
@@ -25,88 +24,90 @@ export const getCategoryColor = (categoryName: string, theme: Theme) => {
   return theme.palette[palette][shade];
 };
 
-export const groupExpensesByYear = (
-  expensesData: ExpensesData
-): Record<number, MonthExpenses[]> => {
-  const yearGroups: Record<number, MonthExpenses[]> = {};
+export function calculateExpenses(
+  transactions: InitialTransaction[]
+): MonthExpenses {
+  const categoryMap = new Map<string, number>();
+  let total = 0;
 
-  Object.entries(expensesData).forEach(([key, monthData]) => {
-    const { year } = parseMonthKey(key);
+  transactions.forEach((t) => {
+    if (t.type === 'expense') {
+      const category = t.category || 'Other';
+      const amount = Math.abs(t.amount);
 
-    if (!yearGroups[year]) {
-      yearGroups[year] = [];
+      total += amount;
+      categoryMap.set(category, (categoryMap.get(category) || 0) + amount);
     }
-
-    yearGroups[year].push(monthData);
   });
 
-  return yearGroups;
-};
-
-const groupCategoriesByYear = (
-  yearMonths: MonthExpenses[]
-): Record<string, CategoryGroup> => {
-  const categoryGroups: Record<string, CategoryGroup> = {};
-
-  yearMonths.forEach((monthData) => {
-    monthData.categories.forEach((category) => {
-      if (!categoryGroups[category.id]) {
-        categoryGroups[category.id] = {
-          id: category.id,
-          name: category.name,
-          amounts: [],
-          percentages: [],
-        };
-      }
-
-      categoryGroups[category.id].amounts.push(category.amount);
-      categoryGroups[category.id].percentages.push(category.percentage);
-    });
-  });
-
-  return categoryGroups;
-};
-
-export const calculateCategoryAverages = (
-  categoryGroups: Record<string, CategoryGroup>
-): CategoryStats[] => {
-  return Object.values(categoryGroups)
-    .map((category) => {
-      const amount =
-        category.amounts.reduce((sum, val) => sum + val, 0) /
-        category.amounts.length;
-      const percentage =
-        category.percentages.reduce((sum, val) => sum + val, 0) /
-        category.percentages.length;
-
-      return {
-        id: category.id,
-        name: category.name,
-        amount,
-        percentage,
-        totalAmount: category.amounts.reduce((sum, val) => sum + val, 0),
-      };
+  const categories: CategoryStats[] = Array.from(categoryMap.entries()).map(
+    ([name, amount]) => ({
+      name: name as ExpenseCategory,
+      amount: Math.round(amount * 100) / 100,
+      percentage:
+        total > 0 ? Math.round((amount / total) * 100 * 100) / 100 : 0,
     })
-    .sort((a, b) => Number(a.id) - Number(b.id));
-};
+  );
 
-export const calculateYearExpenseStats = (
-  year: number,
-  yearMonths: MonthExpenses[]
-): YearExpenses => {
-  const monthCount = yearMonths.length;
-
-  const totalExpenses = yearMonths.reduce((sum, m) => sum + m.total, 0);
-  const avgMonthlyExpenses = totalExpenses / monthCount;
-
-  const categoryGroups = groupCategoriesByYear(yearMonths);
-  const categories = calculateCategoryAverages(categoryGroups);
+  categories.sort((a, b) => b.amount - a.amount);
 
   return {
-    year,
-    monthCount,
-    totalExpenses,
-    avgMonthlyExpenses,
+    total: Math.round(total * 100) / 100,
     categories,
   };
-};
+}
+
+export function getPeriodExpenses(
+  allExpenses: Map<string, MonthExpenses>,
+  { year, month, type }: PeriodWithType
+): MonthExpenses {
+  // For a Year: average metrics
+  if (type === 'year') {
+    const categoryTotals = new Map<string, number>();
+    let totalExpenses = 0;
+    let monthCount = 0;
+
+    for (let m = 0; m < 12; m++) {
+      const key = `${year}-${m}`;
+      const monthExpenses = allExpenses.get(key);
+
+      if (monthExpenses) {
+        monthExpenses.categories.forEach((cat) => {
+          categoryTotals.set(
+            cat.name,
+            (categoryTotals.get(cat.name) || 0) + cat.amount
+          );
+        });
+        totalExpenses += monthExpenses.total;
+        monthCount++;
+      }
+    }
+
+    const avgTotal = monthCount > 0 ? totalExpenses / monthCount : 0;
+
+    const categories = Array.from(categoryTotals.entries()).map(
+      ([name, totalAmount]) => {
+        const avgAmount = monthCount > 0 ? totalAmount / monthCount : 0;
+        return {
+          name: name as ExpenseCategory,
+          amount: Math.round(avgAmount * 100) / 100,
+          percentage:
+            avgTotal > 0
+              ? Math.round((avgAmount / avgTotal) * 100 * 100) / 100
+              : 0,
+        };
+      }
+    );
+
+    categories.sort((a, b) => b.amount - a.amount);
+
+    return {
+      total: Math.round(avgTotal * 100) / 100,
+      categories,
+    };
+  }
+
+  // For a Month: direct lookup
+  const key = `${year}-${month}`;
+  return allExpenses.get(key) || { total: 0, categories: [] };
+}

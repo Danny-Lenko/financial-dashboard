@@ -3,7 +3,7 @@ import { styled } from '@mui/system';
 import { CASHFLOW_CATEGORY_ORDER } from '@/features/cashflow/constants/cashflow.constants';
 import CashflowCard from './CashflowCard';
 import { useAppSelector } from '@/store/hooks';
-import { selectCashflowStats } from '@/features/cashflow/state/cashflow.selectors';
+import { selectActivePeriodCashflowWithTrend } from '@/features/cashflow/state/cashflow.selectors';
 import { memo } from 'react';
 
 const Section = styled('section')(({ theme }) => ({
@@ -14,7 +14,7 @@ const Section = styled('section')(({ theme }) => ({
 }));
 
 function CashflowSection() {
-  const stats = useAppSelector(selectCashflowStats);
+  const stats = useAppSelector(selectActivePeriodCashflowWithTrend);
 
   return (
     <Section>
@@ -22,8 +22,8 @@ function CashflowSection() {
         <CashflowCard
           key={category}
           category={category}
-          amount={stats[category].amount}
-          trend={stats[category].trend}
+          amount={stats[category]}
+          trend={stats.trend ? stats.trend[category] : 0}
         />
       ))}
     </Section>

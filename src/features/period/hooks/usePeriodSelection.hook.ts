@@ -1,52 +1,31 @@
-// features/period/hooks/usePeriodSelection.ts
 import { useCallback } from 'react';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { setActivePeriod } from '../state/period.slice';
-import {
-  selectActivePeriod,
-  selectActivePeriodInfo,
-} from '../state/period.selectors';
-import { getMonthKey } from '../utils/period.utils';
+import { selectActivePeriod } from '../state/period.selectors';
 import { PERIOD_VALUES } from '../constants/periods.constants';
+import type { Period } from '../types/period.types';
 
 export const usePeriodSelection = () => {
   const dispatch = useAppDispatch();
   const activePeriod = useAppSelector(selectActivePeriod);
-  const periodInfo = useAppSelector(selectActivePeriodInfo);
 
   const pickPeriod = useCallback(
-    (period: string | number) => {
-      dispatch(setActivePeriod(period));
+    (period: string) => {
+      dispatch(setActivePeriod(JSON.parse(period)));
     },
     [dispatch]
   );
 
-  const pickCustomPeriod = useCallback(
-    (year: number, month: number) => {
-      const key = getMonthKey(year, month);
+  const isSamePeriod = (a: Period, b: Period) =>
+    a.year === b.year && a.month === b.month;
 
-      if (
-        key === PERIOD_VALUES.THIS_MONTH ||
-        key === PERIOD_VALUES.LAST_MONTH
-      ) {
-        dispatch(setActivePeriod(key));
-        return;
-      }
-
-      dispatch(setActivePeriod(key));
-    },
-    [dispatch]
-  );
-
-  const isPresetPeriod = Object.values(PERIOD_VALUES).includes(
-    activePeriod as string | number
+  const isPresetPeriod = Object.values(PERIOD_VALUES).some((period) =>
+    isSamePeriod(period, activePeriod)
   );
 
   return {
     activePeriod,
-    periodInfo,
     isPresetPeriod,
     pickPeriod,
-    pickCustomPeriod,
   };
 };

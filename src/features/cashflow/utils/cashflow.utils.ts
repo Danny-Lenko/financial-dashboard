@@ -1,91 +1,82 @@
-import {
-  CashflowCategory,
-  type Cashflow,
-  type CashflowAnalysis,
-  type MonthlyData,
-  type YearGroups,
-  type YearlyTotals,
-} from '@/features/cashflow/types/cashflow.types';
-import { parseMonthKey } from '@/shared/utils/parseMonthKey.utils';
+import type { PeriodWithType } from '@/features/period/types/period.types';
+import type { Cashflow, CashflowTrend } from '../types/cashflow.types';
+import type { InitialTransaction } from '@/features/data/types/initialData.types';
 
-export const calculateTrend = (previos: number, current: number) => {
-  if (previos === 0) {
-    return 0;
-  }
-  return ((current - previos) / previos) * 100;
-};
+export function calculateAllMonthsCashflows(
+  transactions: InitialTransaction[],
+  startingBalance: number
+): Cashflow {
+  let incomes = 0;
+  let expenses = 0;
 
-export const calculateBalance = (incomes: number, expenses: number): number => {
-  return incomes - expenses;
-};
-
-export const analyzeCashflow = ({
-  previous,
-  current,
-}: {
-  previous: Cashflow;
-  current: Cashflow;
-}): CashflowAnalysis => {
-  const analyze = (currentVal: number, prevVal: number = 0) => ({
-    amount: currentVal,
-    trend: calculateTrend(prevVal, currentVal),
+  transactions.forEach((t) => {
+    if (t.type === 'income') {
+      incomes += t.amount;
+    } else {
+      expenses += Math.abs(t.amount);
+    }
   });
 
-  const currentBalance = calculateBalance(current.incomes, current.expenses);
-  const prevBalance = previous
-    ? calculateBalance(previous.incomes, previous.expenses)
-    : 0;
+  const balance = startingBalance + incomes - expenses;
 
   return {
-    [CashflowCategory.Balance]: analyze(currentBalance, prevBalance),
-    [CashflowCategory.Incomes]: analyze(current.incomes, previous?.incomes),
-    [CashflowCategory.Expenses]: analyze(current.expenses, previous?.expenses),
+    incomes: Math.round(incomes * 100) / 100,
+    expenses: Math.round(expenses * 100) / 100,
+    balance: Math.round(balance * 100) / 100,
   };
-};
+}
 
-export const groupMonthsByYear = (monthlyData: MonthlyData): YearGroups => {
-  const yearGroups: YearGroups = {};
+export function getPeriodCashflow(
+  allCashflows: Map<string, Cashflow>,
+  { year, month, type }: PeriodWithType
+): Cashflow {
+  // For a Year: average metrics
+  if (type === 'year') {
+    let totalIncomes = 0;
+    let totalExpenses = 0;
+    let totalBalance = 0;
+    let monthCount = 0;
 
-  Object.entries(monthlyData).forEach(([key, data]) => {
-    const { year } = parseMonthKey(key);
+    for (let m = 0; m < 12; m++) {
+      const key = `${year}-${m}`;
+      const monthCashflow = allCashflows.get(key);
 
-    if (!yearGroups[year]) {
-      yearGroups[year] = [];
+      if (monthCashflow) {
+        totalIncomes += monthCashflow.incomes;
+        totalExpenses += monthCashflow.expenses;
+        totalBalance += monthCashflow.balance;
+        monthCount++;
+      }
     }
 
-    yearGroups[year].push({
-      incomes: data.incomes || 0,
-      expenses: data.expenses || 0,
-    });
-  });
+    const getAverage = (total: number) => {
+      return monthCount > 0 ? Math.round((total / monthCount) * 100) / 100 : 0;
+    };
 
-  return yearGroups;
-};
+    return {
+      incomes: getAverage(totalIncomes),
+      expenses: getAverage(totalExpenses),
+      balance: getAverage(totalBalance),
+    };
+  }
 
-export const calculateTotals = (months: Cashflow[]): YearlyTotals => {
-  const totalIncome = months.reduce((sum, m) => sum + m.incomes, 0);
-  const totalExpenses = months.reduce((sum, m) => sum + m.expenses, 0);
-  const totalSavings = totalIncome - totalExpenses;
+  // For a Month: direct lookup
+  const key = `${year}-${month}`;
+  return allCashflows.get(key) || { incomes: 0, expenses: 0, balance: 0 };
+}
 
-  return { totalIncome, totalExpenses, totalSavings };
-};
-
-export const calculateAverages = (totals: YearlyTotals, monthCount: number) => {
-  return {
-    incomes: totals.totalIncome / monthCount,
-    expenses: totals.totalExpenses / monthCount,
-    balance: totals.totalSavings / monthCount,
+export function calculateTrend(
+  current: Cashflow,
+  previous: Cashflow
+): CashflowTrend {
+  const calcPercent = (curr: number, prev: number) => {
+    if (prev === 0) return 0;
+    return Math.round(((curr - prev) / prev) * 100 * 100) / 100;
   };
-};
-
-export const calculateYearStats = (year: string, months: Cashflow[]) => {
-  const monthCount = months.length;
-  const totals = calculateTotals(months);
-  const averages = calculateAverages(totals, monthCount);
 
   return {
-    year: parseInt(year),
-    monthCount,
-    ...averages,
+    incomes: calcPercent(current.incomes, previous.incomes),
+    expenses: calcPercent(current.expenses, previous.expenses),
+    balance: calcPercent(current.balance, previous.balance),
   };
-};
+}

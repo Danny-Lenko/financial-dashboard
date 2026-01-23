@@ -12,7 +12,7 @@ interface ExpenseConfig {
   icon: React.ElementType;
 }
 
-export const EXPENSES_CONFIG: ExpenseConfig[] = [
+export const EXPENSE_CATEGORIES_CONFIG: ExpenseConfig[] = [
   {
     name: ExpenseCategory.House,
     color: 'secondary.main',
