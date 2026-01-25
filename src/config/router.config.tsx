@@ -4,6 +4,12 @@ import { Navigate } from 'react-router-dom';
 
 const OverviewPage = lazy(() => import('@/pages/Overview'));
 const TransactionsPage = lazy(() => import('@/pages/Transactions'));
+const AddTransactionsLayout = lazy(
+  () => import('@/features/transactions/components/AddTransactionsLayout')
+);
+const TransactionFormContent = lazy(
+  () => import('@/features/transactions/components/TransactionsFormContent')
+);
 // const TransactionDetailPage = lazy(() => import('@/pages/TransactionDetail/TransactionDetail'));
 // const TransactionEditPage = lazy(() => import('@/pages/TransactionEdit/TransactionEdit'));
 const CategoriesPage = lazy(() => import('@/pages/Categories'));
@@ -43,16 +49,23 @@ export const ROUTES_CONFIG: RouteConfig[] = [
         element: <TransactionsPage />,
       },
       {
+        path: 'add',
+        element: <AddTransactionsLayout />,
+        children: [
+          { index: true, element: <Navigate to="expense" replace /> },
+          {
+            path: ':type',
+            element: <TransactionFormContent />,
+          },
+        ],
+      },
+      {
         path: ':id',
         // element: <TransactionDetailPage />,
       },
       {
         path: ':id/edit',
         // element: <TransactionEditPage />,
-      },
-      {
-        path: 'new',
-        // element: <TransactionCreatePage />,
       },
     ],
   },

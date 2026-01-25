@@ -28,12 +28,21 @@ const ButtonStyled = styled(Button)(({ theme }) => ({
   '&.Mui-disabled .MuiTypography-root': {
     color: theme.palette.text.disabled,
   },
+
+  '&.Mui-focused': {
+    outline: '2px solid black',
+    outlineOffset: '-2px',
+  },
 }));
 
 function AddCashflowRecordingButton({
   type,
+  onClick,
+  isActive,
 }: {
   type: AddRecordingButtonType;
+  onClick: (path: string) => void;
+  isActive: boolean;
 }) {
   const config = ADD_RECORDING_BUTTONS_CONFIG[type];
   const Icon = config.icon;
@@ -44,6 +53,8 @@ function AddCashflowRecordingButton({
       sx={{ boxShadow: 1 }}
       fullWidth
       disabled={config.disabled}
+      onClick={() => onClick(config.path)}
+      className={isActive ? 'Mui-focused' : ''}
     >
       <Icon />
       <Stack justifyContent="start" alignItems="flex-start">
