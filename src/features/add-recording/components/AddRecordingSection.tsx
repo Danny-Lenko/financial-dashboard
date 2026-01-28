@@ -1,15 +1,7 @@
-import { styled } from '@mui/system';
-
 import { ADD_RECORDING_BUTTONS_ORDER } from '../constants/add-recording.constants';
 import AddCashflowRecordingButton from '@/components/common/AddRecordingButton/AddRecordingButton';
+import OverviewGridSection from '@/components/common/OverviewGridSection/OverviewGridSection';
 import { useNavigate, useParams } from 'react-router-dom';
-
-const Section = styled('section')(({ theme }) => ({
-  marginTop: theme.spacing(4),
-  display: 'grid',
-  gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-  gap: theme.spacing(2),
-}));
 
 function AddRecordingSection() {
   const { type } = useParams();
@@ -24,7 +16,7 @@ function AddRecordingSection() {
   };
 
   return (
-    <Section>
+    <OverviewGridSection>
       {ADD_RECORDING_BUTTONS_ORDER.map((buttonType) => {
         return (
           <AddCashflowRecordingButton
@@ -35,7 +27,7 @@ function AddRecordingSection() {
           />
         );
       })}
-    </Section>
+    </OverviewGridSection>
   );
 }
 

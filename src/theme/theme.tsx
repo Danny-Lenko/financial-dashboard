@@ -3,6 +3,8 @@ import { colors } from './colors';
 import { typography } from './typography';
 import type { Shadows } from '@mui/material/styles';
 
+import type {} from '@mui/x-date-pickers/themeAugmentation';
+
 const theme = createTheme({
   cssVariables: true,
   palette: {

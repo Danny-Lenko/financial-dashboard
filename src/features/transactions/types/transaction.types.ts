@@ -1,4 +1,11 @@
-export type PaymentMethod = 'bank_account' | 'credit_card' | 'debit_card';
+export const PaymentMethod = {
+  BankAccount: 'bank_account',
+  CreditCard: 'credit_card',
+  DebitCard: 'debit_card',
+  Cash: 'cash',
+} as const;
+
+export type PaymentMethod = (typeof PaymentMethod)[keyof typeof PaymentMethod];
 
 export interface Transaction {
   id: string;
