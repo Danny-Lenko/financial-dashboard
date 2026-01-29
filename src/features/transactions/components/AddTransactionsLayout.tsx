@@ -11,7 +11,7 @@ import { selectInitialTransactions } from '@/features/data/state/data.selectors'
 import { transactionSchema } from '../schemas/transaction.shema';
 import dayjs from 'dayjs';
 import AppSection from '@/components/common/AppSection/AppSection';
-import { ExpenseCategory } from '@/features/expenses/types/expenses.types';
+import { useEffect } from 'react';
 
 function AddTransactionsLayout() {
   const initialTransactions = useAppSelector(selectInitialTransactions);
@@ -27,13 +27,27 @@ function AddTransactionsLayout() {
       type: type as 'income' | 'expense',
       name: '',
       amount: undefined,
-      category: type === 'expense' ? ExpenseCategory.Charges : undefined,
-      method: 'cash',
-      // MVP setting default date to a fixed date for easier testing
       date: dayjs('2025-07-31').toDate(),
+      method: undefined,
+      category: undefined,
+      // MVP setting default date to a fixed date for easier testing
       description: '',
     },
   });
+
+  useEffect(() => {
+    if (type === 'income' || type === 'expense') {
+      methods.setValue('type', type);
+    }
+  }, [type, methods]);
+
+  const formType = methods.watch('type');
+
+  useEffect(() => {
+    if (formType === 'income') {
+      methods.setValue('category', undefined);
+    }
+  }, [formType, methods]);
 
   const isValidTransactionType = (
     type?: string

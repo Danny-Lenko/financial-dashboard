@@ -6,19 +6,34 @@ import { PaymentMethod } from '../types/transaction.types';
 export const transactionSchema = z
   .object({
     type: z.enum(['income', 'expense']),
-    name: z.string().min(2),
-    amount: z.number().positive(),
-    category: z.enum(ExpenseCategory).optional(),
-    method: z.enum(PaymentMethod),
+    name: z
+      .string('Vendor is required')
+      .min(2, 'Vendor name must be at least 2 characters')
+      .max(30, 'Vendor name must be at most 30 characters'),
+    amount: z.number('Amount is required').positive('Amount must be positive'),
     date: z.date().max(new Date()),
+    method: z.enum(PaymentMethod, 'Payment method is required'),
+    category: z
+      .enum(ExpenseCategory, 'Category is required for expenses')
+      .optional(),
     description: z.string().max(1000).optional(),
   })
-  .superRefine((data, ctx) => {
-    if (data.type === 'expense' && !data.category) {
-      ctx.addIssue({
-        code: 'custom',
-        message: 'Category is required for expenses',
-        path: ['category'],
-      });
+  .refine(
+    (data) => {
+      // Category is required only for expenses
+      return !(data.type === 'expense' && !data.category);
+    },
+    {
+      message: 'Category is required for expenses',
+      path: ['category'],
+
+      // The check runs independently of other fields
+      when(payload) {
+        const result = z
+          .object({ type: z.enum(['income', 'expense']) })
+          .safeParse(payload.value);
+
+        return result.success;
+      },
     }
-  });
+  );

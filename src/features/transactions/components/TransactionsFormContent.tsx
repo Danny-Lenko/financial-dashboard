@@ -1,12 +1,26 @@
 import { useEffect } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
-import type { transactionSchema } from '../schemas/transaction.shema';
 import type z from 'zod';
-import { Autocomplete, Box, Button, TextField } from '@mui/material';
-import { DatePicker } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
+import { DatePicker } from '@mui/x-date-pickers';
+import {
+  Autocomplete,
+  Box,
+  Button,
+  FormControl,
+  FormControlLabel,
+  FormHelperText,
+  FormLabel,
+  Radio,
+  RadioGroup,
+  TextField,
+} from '@mui/material';
+
+import type { transactionSchema } from '../schemas/transaction.shema';
 import { ExpenseCategory } from '@/features/expenses/types/expenses.types';
+import { PaymentMethod } from '../types/transaction.types';
+import { formatPaymentMethod } from '@/shared/utils/formatters/formatPaymentMethods.utils';
 
 function TransactionsFormContent() {
   const { type = 'expense' } = useParams();
@@ -47,7 +61,7 @@ function TransactionsFormContent() {
           render={({ field }) => (
             <TextField
               {...field}
-              label="Vendor"
+              label="Vendor *"
               error={!!errors.name}
               helperText={errors.name?.message}
               fullWidth
@@ -63,10 +77,12 @@ function TransactionsFormContent() {
             <TextField
               {...field}
               type="number"
-              label="Amount"
-              onChange={(e) =>
-                field.value ? field.onChange(Number(e.target.value)) : undefined
-              }
+              label="Amount *"
+              value={field.value ?? ''}
+              onChange={(e) => {
+                const value = e.target.value;
+                field.onChange(value === '' ? undefined : Number(value));
+              }}
               error={!!errors.amount}
               helperText={errors.amount?.message}
               fullWidth
@@ -80,11 +96,11 @@ function TransactionsFormContent() {
           control={control}
           render={({ field }) => (
             <DatePicker
-              label="Date"
+              label="Date *"
               format="YYYY/MM/DD"
               value={field.value ? dayjs(field.value) : null}
               onChange={(value) =>
-                field.onChange(value ? value.toDate() : null)
+                field.onChange(value ? value.toDate() : undefined)
               }
               // MVP setting fixed min and max dates for easier testing
               maxDate={dayjs('2025-07-31')}
@@ -125,7 +141,7 @@ function TransactionsFormContent() {
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    label="Category"
+                    label="Category *"
                     error={!!errors.category}
                     helperText={errors.category?.message}
                     fullWidth
@@ -135,6 +151,36 @@ function TransactionsFormContent() {
             )}
           />
         )}
+
+        {/* Method — span 2 */}
+        <Box sx={{ gridColumn: '1 / -1' }}>
+          <Controller
+            name="method"
+            control={control}
+            render={({ field }) => (
+              <FormControl error={!!errors.method}>
+                <FormLabel>Method *</FormLabel>
+
+                <RadioGroup
+                  row
+                  value={field.value || ''}
+                  onChange={(e) => field.onChange(e.target.value)}
+                >
+                  {Object.values(PaymentMethod).map((method) => (
+                    <FormControlLabel
+                      key={method}
+                      value={method}
+                      control={<Radio />}
+                      label={formatPaymentMethod(method)}
+                    />
+                  ))}
+                </RadioGroup>
+
+                <FormHelperText>{errors.method?.message}</FormHelperText>
+              </FormControl>
+            )}
+          />
+        </Box>
 
         {/* Description — span 2 */}
         <Box sx={{ gridColumn: '1 / -1' }}>
