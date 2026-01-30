@@ -10,6 +10,7 @@ import { initializeData } from './features/data/state/data.slice.ts';
 import theme from '@/theme/theme.tsx';
 import { router } from './routes.tsx';
 import './index.css';
+import { Toaster } from 'sonner';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -24,6 +25,7 @@ createRoot(document.getElementById('root')!).render(
         <ThemeProvider theme={theme}>
           <CssBaseline />
           <RouterProvider router={router} />
+          <Toaster richColors />
         </ThemeProvider>
       </PersistGate>
     </Provider>

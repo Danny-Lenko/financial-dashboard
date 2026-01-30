@@ -21,6 +21,10 @@ import type { transactionSchema } from '../schemas/transaction.shema';
 import { ExpenseCategory } from '@/features/expenses/types/expenses.types';
 import { PaymentMethod } from '../types/transaction.types';
 import { formatPaymentMethod } from '@/shared/utils/formatters/formatPaymentMethods.utils';
+import { useAppDispatch } from '@/store/hooks';
+import { addTransaction } from '@/features/data/state/data.slice';
+import { useTransactionToast } from '../hooks/useTransactionToast';
+import type { InitialTransaction } from '@/features/data/types/initialData.types';
 
 function TransactionsFormContent() {
   const { type = 'expense' } = useParams();
@@ -29,17 +33,54 @@ function TransactionsFormContent() {
     control,
     handleSubmit,
     formState: { errors, isSubmitting },
+    reset,
   } = useFormContext<z.infer<typeof transactionSchema>>();
 
   const navigate = useNavigate();
+
+  const dispatch = useAppDispatch();
+
+  const { showTransactionAdded } = useTransactionToast();
 
   useEffect(() => {
     if (!type) navigate('expense', { replace: true });
   }, [type, navigate]);
 
-  const onSubmit = async (data: z.infer<typeof transactionSchema>) => {
-    console.log('Valid data:', data);
-    // API call...
+  const onSubmit = async (values: z.infer<typeof transactionSchema>) => {
+    const year = dayjs(values.date).year();
+    const month = dayjs(values.date).month();
+    const normalizedDate = dayjs(values.date).format('YYYY-MM-DD');
+
+    const transaction: InitialTransaction = {
+      id: crypto.randomUUID(),
+      type: values.type,
+      name: values.name,
+      category: values.category,
+      method: values.method,
+      date: normalizedDate,
+      amount:
+        values.type === 'expense'
+          ? -Math.abs(values.amount)
+          : Math.abs(values.amount),
+      description: values.description,
+      createdAt: new Date().toISOString(),
+    };
+
+    dispatch(
+      addTransaction({
+        year,
+        month,
+        transaction,
+      })
+    );
+
+    showTransactionAdded({
+      year,
+      month,
+      transaction,
+    });
+
+    reset();
   };
 
   return (
@@ -100,7 +141,7 @@ function TransactionsFormContent() {
               format="YYYY/MM/DD"
               value={field.value ? dayjs(field.value) : null}
               onChange={(value) =>
-                field.onChange(value ? value.toDate() : undefined)
+                field.onChange(value ? value.format('YYYY-MM-DD') : undefined)
               }
               // MVP setting fixed min and max dates for easier testing
               maxDate={dayjs('2025-07-31')}
