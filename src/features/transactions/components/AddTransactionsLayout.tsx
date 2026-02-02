@@ -1,5 +1,5 @@
 import { FormProvider, useForm } from 'react-hook-form';
-import { Navigate, Outlet, useParams } from 'react-router-dom';
+import { Navigate, Outlet, useNavigate, useParams } from 'react-router-dom';
 import type z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { LocalizationProvider } from '@mui/x-date-pickers';
@@ -39,15 +39,17 @@ function AddTransactionsLayout() {
     if (type === 'income' || type === 'expense') {
       methods.setValue('type', type);
     }
-  }, [type, methods]);
 
-  const formType = methods.watch('type');
-
-  useEffect(() => {
-    if (formType === 'income') {
+    if (type === 'income') {
       methods.setValue('category', undefined);
     }
-  }, [formType, methods]);
+  }, [type, methods]);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!type) navigate('expense', { replace: true });
+  }, [type, navigate]);
 
   const isValidTransactionType = (
     type?: string
@@ -62,7 +64,7 @@ function AddTransactionsLayout() {
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <AddRecordingSection />
         <AppSection>
-          <Outlet /> {/* Renders TransactionsFormContent */}
+          <Outlet context={{ type }} /> {/* Renders TransactionsFormContent */}
         </AppSection>
       </LocalizationProvider>
     </FormProvider>

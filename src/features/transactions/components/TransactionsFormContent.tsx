@@ -1,6 +1,4 @@
-import { useEffect } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-import { useNavigate, useParams } from 'react-router-dom';
 import type z from 'zod';
 import dayjs from 'dayjs';
 import { DatePicker } from '@mui/x-date-pickers';
@@ -25,9 +23,10 @@ import { useAppDispatch } from '@/store/hooks';
 import { addTransaction } from '@/features/data/state/data.slice';
 import { useTransactionToast } from '../hooks/useTransactionToast';
 import type { InitialTransaction } from '@/features/data/types/initialData.types';
+import { useOutletContext } from 'react-router-dom';
 
 function TransactionsFormContent() {
-  const { type = 'expense' } = useParams();
+  const { type } = useOutletContext<{ type: 'income' | 'expense' }>();
 
   const {
     control,
@@ -36,15 +35,9 @@ function TransactionsFormContent() {
     reset,
   } = useFormContext<z.infer<typeof transactionSchema>>();
 
-  const navigate = useNavigate();
-
   const dispatch = useAppDispatch();
 
   const { showTransactionAdded } = useTransactionToast();
-
-  useEffect(() => {
-    if (!type) navigate('expense', { replace: true });
-  }, [type, navigate]);
 
   const onSubmit = async (values: z.infer<typeof transactionSchema>) => {
     const year = dayjs(values.date).year();
