@@ -1,8 +1,8 @@
 import { normalizeMerchantName } from '@/shared/utils/formatters/normalizeMerchantName.utils';
-import { CompanyLogo } from '../components/CompanyLogo';
+import { CompanyLogo } from './CompanyLogo';
 import { resolveDomain } from '@/shared/utils/resolveDomain.utils';
 
-export const formatDescription = (value: string) => {
+export const Description = (value: string) => {
   if (typeof value !== 'string') return value;
 
   const name = normalizeMerchantName(value);

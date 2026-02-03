@@ -1,4 +1,4 @@
-import { getLogoUrl } from '../utils/transactions.utils';
+import { getLogoUrl } from '@/shared/utils/getLogoUrl.utils';
 
 type Props = {
   domain: string;

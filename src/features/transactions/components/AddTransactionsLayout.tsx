@@ -35,7 +35,11 @@ function AddTransactionsLayout() {
     },
   });
 
+  const navigate = useNavigate();
+
   useEffect(() => {
+    if (!type) navigate('expense', { replace: true });
+
     if (type === 'income' || type === 'expense') {
       methods.setValue('type', type);
     }
@@ -43,13 +47,7 @@ function AddTransactionsLayout() {
     if (type === 'income') {
       methods.setValue('category', undefined);
     }
-  }, [type, methods]);
-
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!type) navigate('expense', { replace: true });
-  }, [type, navigate]);
+  }, [type, methods, navigate]);
 
   const isValidTransactionType = (
     type?: string

@@ -1,6 +1,6 @@
 import { TableBody } from '@mui/material';
 
-import { getCellColor } from '@/features/transactions/utils/last-transactions.utils';
+import { getCellColor } from '@/features/transactions/services/getCellColor.service';
 import { TABLE_COLUMNS_CONFIG } from '@/features/transactions/constants/last-transactions.constants';
 import {
   Table,

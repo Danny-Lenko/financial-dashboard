@@ -14,16 +14,15 @@ import {
   RadioGroup,
   TextField,
 } from '@mui/material';
+import MDEditor, { commands } from '@uiw/react-md-editor';
+import rehypeSanitize from 'rehype-sanitize';
 
 import type { transactionSchema } from '../schemas/transaction.shema';
 import { ExpenseCategory } from '@/features/expenses/types/expenses.types';
 import { PaymentMethod } from '../types/transaction.types';
 import { formatPaymentMethod } from '@/shared/utils/formatters/formatPaymentMethods.utils';
-import { useAppDispatch } from '@/store/hooks';
-import { addTransaction } from '@/features/data/state/data.slice';
-import { useTransactionToast } from '../hooks/useTransactionToast';
-import type { InitialTransaction } from '@/features/data/types/initialData.types';
 import { useOutletContext } from 'react-router-dom';
+import { useSubmitTransaction } from '../hooks/useSubmitTransaction';
 
 function TransactionsFormContent() {
   const { type } = useOutletContext<{ type: 'income' | 'expense' }>();
@@ -35,46 +34,7 @@ function TransactionsFormContent() {
     reset,
   } = useFormContext<z.infer<typeof transactionSchema>>();
 
-  const dispatch = useAppDispatch();
-
-  const { showTransactionAdded } = useTransactionToast();
-
-  const onSubmit = async (values: z.infer<typeof transactionSchema>) => {
-    const year = dayjs(values.date).year();
-    const month = dayjs(values.date).month();
-    const normalizedDate = dayjs(values.date).format('YYYY-MM-DD');
-
-    const transaction: InitialTransaction = {
-      id: crypto.randomUUID(),
-      type: values.type,
-      name: values.name,
-      category: values.category,
-      method: values.method,
-      date: normalizedDate,
-      amount:
-        values.type === 'expense'
-          ? -Math.abs(values.amount)
-          : Math.abs(values.amount),
-      description: values.description,
-      createdAt: new Date().toISOString(),
-    };
-
-    dispatch(
-      addTransaction({
-        year,
-        month,
-        transaction,
-      })
-    );
-
-    showTransactionAdded({
-      year,
-      month,
-      transaction,
-    });
-
-    reset();
-  };
+  const onSubmit = useSubmitTransaction(reset);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -222,15 +182,34 @@ function TransactionsFormContent() {
             name="description"
             control={control}
             render={({ field }) => (
-              <TextField
-                {...field}
-                label="Description"
-                multiline
-                rows={3}
-                error={!!errors.description}
-                helperText={errors.description?.message}
-                fullWidth
-              />
+              <div data-color-mode="light">
+                <FormLabel sx={{ display: 'block', marginBottom: 1 }}>
+                  Description
+                </FormLabel>
+                <MDEditor
+                  value={field.value ?? ''}
+                  onChange={(value) => field.onChange(value ?? '')}
+                  preview="live"
+                  previewOptions={{
+                    rehypePlugins: [[rehypeSanitize]],
+                  }}
+                  commands={[
+                    commands.bold,
+                    commands.italic,
+                    commands.strikethrough,
+                    commands.divider,
+                    commands.heading2,
+                    commands.heading3,
+                    commands.divider,
+                    commands.unorderedListCommand,
+                    commands.orderedListCommand,
+                    commands.divider,
+                    commands.link,
+                    commands.divider,
+                    commands.help,
+                  ]}
+                />
+              </div>
             )}
           />
         </Box>

@@ -6,13 +6,13 @@ import { formatCurrencyWithSign } from '@/shared/utils/formatters/currency.utils
 import { formatDate } from '@/shared/utils/formatters/date.utils';
 import { formatPaymentMethod } from '@/shared/utils/formatters/payment-method.utils';
 import type { Formatter } from '../types/transaction.types';
-import { formatDescription } from '../utils/formatDescripiton.utils';
+import { Description } from '../components/Description';
 
 export const TABLE_COLUMNS_CONFIG: Column<Transaction>[] = [
   {
     id: 'name',
     label: 'Description',
-    format: formatDescription as Formatter,
+    format: Description as Formatter,
     padding: '12px 18px',
   },
   {
