@@ -1,3 +1,8 @@
+import type { ReactNode } from 'react';
+import type { InitialTransaction } from '@/features/data/types/initialData.types';
+
+import type { SvgIconComponent } from '@mui/icons-material';
+
 export const PaymentMethod = {
   BankAccount: 'bank_account',
   CreditCard: 'credit_card',
@@ -28,4 +33,12 @@ export interface Column<T> {
   label: string;
   format?: Formatter;
   padding: string;
+}
+
+export interface TransactionDetailConfig {
+  field: keyof InitialTransaction;
+  icon: SvgIconComponent;
+  formatter?: (
+    value: InitialTransaction[keyof InitialTransaction]
+  ) => ReactNode;
 }

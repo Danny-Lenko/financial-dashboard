@@ -10,7 +10,7 @@ const AddTransactionsLayout = lazy(
 const TransactionFormContent = lazy(
   () => import('@/features/transactions/components/TransactionsFormContent')
 );
-// const TransactionDetailPage = lazy(() => import('@/pages/TransactionDetail/TransactionDetail'));
+const TransactionDetail = lazy(() => import('@/pages/TransactionDetail'));
 // const TransactionEditPage = lazy(() => import('@/pages/TransactionEdit/TransactionEdit'));
 const CategoriesPage = lazy(() => import('@/pages/Categories'));
 
@@ -61,7 +61,7 @@ export const ROUTES_CONFIG: RouteConfig[] = [
       },
       {
         path: ':id',
-        // element: <TransactionDetailPage />,
+        element: <TransactionDetail />,
       },
       {
         path: ':id/edit',

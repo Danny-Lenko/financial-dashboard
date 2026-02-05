@@ -36,7 +36,7 @@ function LastTransactionsTable() {
                 if (column.id === 'menu') {
                   return (
                     <TD key={column.id}>
-                      <TableMenu />
+                      <TableMenu id={transaction.id} />
                     </TD>
                   );
                 }

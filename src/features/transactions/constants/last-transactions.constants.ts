@@ -1,12 +1,20 @@
 import type {
   Column,
   Transaction,
+  TransactionDetailConfig,
 } from '@/features/transactions/types/transaction.types';
 import { formatCurrencyWithSign } from '@/shared/utils/formatters/currency.utils';
 import { formatDate } from '@/shared/utils/formatters/date.utils';
 import { formatPaymentMethod } from '@/shared/utils/formatters/payment-method.utils';
 import type { Formatter } from '../types/transaction.types';
 import { Description } from '../components/Description';
+
+import IsoIcon from '@mui/icons-material/Iso';
+import StorefrontIcon from '@mui/icons-material/Storefront';
+import PaidIcon from '@mui/icons-material/Paid';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import CreditCardIcon from '@mui/icons-material/CreditCard';
+import DonutSmallIcon from '@mui/icons-material/DonutSmall';
 
 export const TABLE_COLUMNS_CONFIG: Column<Transaction>[] = [
   {
@@ -34,6 +42,15 @@ export const TABLE_COLUMNS_CONFIG: Column<Transaction>[] = [
     padding: '14px 18px',
   },
   { id: 'menu', label: '', padding: '12px 18px' },
+];
+
+export const TRANSACTION_DETAIL_CONFIG: TransactionDetailConfig[] = [
+  { field: 'type', icon: IsoIcon },
+  { field: 'name', icon: StorefrontIcon },
+  { field: 'amount', icon: PaidIcon },
+  { field: 'date', icon: CalendarMonthIcon },
+  { field: 'method', icon: CreditCardIcon },
+  { field: 'category', icon: DonutSmallIcon },
 ];
 
 export const INCOME_SOURCES = [

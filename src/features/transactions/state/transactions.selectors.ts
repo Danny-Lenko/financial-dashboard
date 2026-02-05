@@ -27,3 +27,14 @@ export const selectActivePeriodLastTransactions = createSelector(
       .slice(0, LAST_TRANSACTIONS_LIMIT);
   }
 );
+
+export const selectTransactionById = (id: string) =>
+  createSelector([selectInitialTransactions], (monthlyData) => {
+    for (const monthData of monthlyData) {
+      const transaction = monthData.transactions.find((t) => t.id === id);
+      if (transaction) {
+        return transaction;
+      }
+    }
+    return null;
+  });
