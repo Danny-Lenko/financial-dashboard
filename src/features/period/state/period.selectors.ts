@@ -36,18 +36,18 @@ export const selectPreviousPeriod = createSelector(
 
 export const selectStartingPeriod = createSelector(
   [selectInitialTransactions],
-  (monthlyData): Period => {
-    if (monthlyData.length === 0) {
+  (allTransactions): Period => {
+    if (allTransactions.length === 0) {
       const currentDate = new Date();
       return { year: currentDate.getFullYear(), month: currentDate.getMonth() };
     }
 
-    const sorted = [...monthlyData].sort((a, b) => {
-      if (a.year !== b.year) return a.year - b.year;
-      return a.month - b.month;
-    });
+    const oldestTransaction = allTransactions.reduce((oldest, transaction) =>
+      transaction.date < oldest.date ? transaction : oldest
+    );
 
-    const first = sorted[0];
-    return { year: first.year, month: first.month };
+    const startDate = new Date(oldestTransaction.date);
+
+    return { year: startDate.getFullYear(), month: startDate.getMonth() };
   }
 );

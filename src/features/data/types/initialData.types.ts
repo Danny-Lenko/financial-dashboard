@@ -1,3 +1,4 @@
+import type { EntityState } from '@reduxjs/toolkit';
 import type { PaymentMethod } from '@/features/transactions/types/transaction.types';
 
 export type TransactionType = 'income' | 'expense';
@@ -20,19 +21,18 @@ export interface InitialMonthlyBudget {
   transactions: InitialTransaction[];
 }
 
-export interface DataState {
-  initialTransactions: InitialMonthlyBudget[];
+export interface DataState extends EntityState<InitialTransaction, string> {
   isInitialized: boolean;
 }
 
 export interface AddTransactionPayload {
-  year: number;
-  month: number;
+  transaction: InitialTransaction;
+}
+
+export interface UpdateTransactionPayload {
   transaction: InitialTransaction;
 }
 
 export interface RemoveTransactionPayload {
-  year: number;
-  month: number;
   transactionId: string;
 }

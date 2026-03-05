@@ -6,13 +6,23 @@ import { selectActivePeriod } from '@/features/period/state/period.selectors';
 
 export const selectAllMonthsExpenses = createSelector(
   [selectInitialTransactions],
-  (monthlyData): Map<string, MonthExpenses> => {
+  (allTransactions): Map<string, MonthExpenses> => {
     const expensesMap = new Map<string, MonthExpenses>();
+    const grouped = new Map<string, typeof allTransactions>();
 
-    monthlyData.forEach(({ year, month, transactions }) => {
-      const expenses = calculateExpenses(transactions);
+    allTransactions.forEach((transaction) => {
+      const date = new Date(transaction.date);
+      const year = date.getFullYear();
+      const month = date.getMonth();
       const key = `${year}-${month}`;
-      expensesMap.set(key, expenses);
+
+      const transactionsForMonth = grouped.get(key) ?? [];
+      transactionsForMonth.push(transaction);
+      grouped.set(key, transactionsForMonth);
+    });
+
+    grouped.forEach((transactions, key) => {
+      expensesMap.set(key, calculateExpenses(transactions));
     });
 
     return expensesMap;

@@ -1,18 +1,31 @@
-import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
+import {
+  createEntityAdapter,
+  createSlice,
+  type PayloadAction,
+} from '@reduxjs/toolkit';
 
 import type {
   AddTransactionPayload,
   DataState,
   InitialMonthlyBudget,
+  InitialTransaction,
   RemoveTransactionPayload,
+  UpdateTransactionPayload,
 } from '../types/initialData.types';
 
 import initialTransactions from '../mocks/initial-transactions.json';
 
-const initialState: DataState = {
-  initialTransactions: [],
+const transactionsAdapter = createEntityAdapter<InitialTransaction, string>({
+  selectId: (transaction) => transaction.id,
+  sortComparer: (a, b) => b.date.localeCompare(a.date),
+});
+
+const normalizeTransactions = (monthlyData: InitialMonthlyBudget[]) =>
+  monthlyData.flatMap((monthlyBudget) => monthlyBudget.transactions);
+
+const initialState: DataState = transactionsAdapter.getInitialState({
   isInitialized: false,
-};
+});
 
 const dataSlice = createSlice({
   name: 'data',
@@ -20,53 +33,35 @@ const dataSlice = createSlice({
   reducers: {
     initializeData(state) {
       if (!state.isInitialized) {
-        state.initialTransactions =
-          initialTransactions as InitialMonthlyBudget[];
+        transactionsAdapter.setAll(
+          state,
+          normalizeTransactions(initialTransactions as InitialMonthlyBudget[])
+        );
         state.isInitialized = true;
       }
     },
 
     addTransaction(state, action: PayloadAction<AddTransactionPayload>) {
-      const { year, month, transaction } = action.payload;
+      transactionsAdapter.addOne(state, action.payload.transaction);
+    },
 
-      const monthlyBudget = state.initialTransactions.find(
-        (item) => item.year === year && item.month === month
-      );
-
-      if (monthlyBudget) {
-        monthlyBudget.transactions.push(transaction);
-      } else {
-        state.initialTransactions.push({
-          year,
-          month,
-          transactions: [transaction],
-        });
-      }
+    updateTransaction(state, action: PayloadAction<UpdateTransactionPayload>) {
+      transactionsAdapter.updateOne(state, {
+        id: action.payload.transaction.id,
+        changes: action.payload.transaction,
+      });
     },
 
     removeTransaction(state, action: PayloadAction<RemoveTransactionPayload>) {
-      const { year, month, transactionId } = action.payload;
-
-      const monthlyBudget = state.initialTransactions.find(
-        (item) => item.year === year && item.month === month
-      );
-
-      if (!monthlyBudget) return;
-
-      monthlyBudget.transactions = monthlyBudget.transactions.filter(
-        (t) => t.id !== transactionId
-      );
-
-      // cleanup: if no transactions left for the month, remove the month entry
-      if (monthlyBudget.transactions.length === 0) {
-        state.initialTransactions = state.initialTransactions.filter(
-          (item) => !(item.year === year && item.month === month)
-        );
-      }
+      transactionsAdapter.removeOne(state, action.payload.transactionId);
     },
   },
 });
 
-export const { initializeData, addTransaction, removeTransaction } =
-  dataSlice.actions;
+export const {
+  initializeData,
+  addTransaction,
+  updateTransaction,
+  removeTransaction,
+} = dataSlice.actions;
 export default dataSlice.reducer;
