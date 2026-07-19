@@ -6,18 +6,12 @@ import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 import AddRecordingSection from '@/features/add-recording/components/AddRecordingSection';
-import { useAppSelector } from '@/store/hooks';
-import { selectInitialTransactions } from '@/features/data/state/data.selectors';
 import { transactionSchema } from '../schemas/transaction.shema';
 import dayjs from 'dayjs';
 import AppSection from '@/components/common/AppSection/AppSection';
 import { useEffect } from 'react';
 
 function AddTransactionsLayout() {
-  const initialTransactions = useAppSelector(selectInitialTransactions);
-
-  console.log({ initialTransactions });
-
   const { type } = useParams();
 
   const methods = useForm<z.infer<typeof transactionSchema>>({

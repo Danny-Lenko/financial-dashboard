@@ -14,18 +14,50 @@ import {
   getPeriodCashflow,
 } from '../utils/cashflow.utils';
 
-export const selectAllPeriodsCashflows = createSelector(
+interface GroupedTransactions {
+  year: number;
+  month: number;
+  transactions: ReturnType<typeof selectInitialTransactions>[number][];
+}
+
+const selectGroupedTransactionsByMonth = createSelector(
   [selectInitialTransactions],
+  (allTransactions): GroupedTransactions[] => {
+    const grouped = new Map<string, GroupedTransactions>();
+
+    allTransactions.forEach((transaction) => {
+      const date = new Date(transaction.date);
+      const year = date.getFullYear();
+      const month = date.getMonth();
+      const key = `${year}-${month}`;
+
+      const existing = grouped.get(key);
+      if (existing) {
+        existing.transactions.push(transaction);
+        return;
+      }
+
+      grouped.set(key, {
+        year,
+        month,
+        transactions: [transaction],
+      });
+    });
+
+    return [...grouped.values()].sort((a, b) => {
+      if (a.year !== b.year) return a.year - b.year;
+      return a.month - b.month;
+    });
+  }
+);
+
+export const selectAllPeriodsCashflows = createSelector(
+  [selectGroupedTransactionsByMonth],
   (monthlyData): Map<string, Cashflow> => {
     const cashflows = new Map<string, Cashflow>();
     let runningBalance = INITIAL_BALANCE;
 
-    const sorted = [...monthlyData].sort((a, b) => {
-      if (a.year !== b.year) return a.year - b.year;
-      return a.month - b.month;
-    });
-
-    sorted.forEach(({ year, month, transactions }) => {
+    monthlyData.forEach(({ year, month, transactions }) => {
       const cashflow = calculateAllMonthsCashflows(
         transactions,
         runningBalance

@@ -13,8 +13,6 @@ export function useSubmitTransaction(reset: () => void) {
   return async (values: z.infer<typeof transactionSchema>) => {
     const { date, type, amount, ...rest } = values;
 
-    const year = dayjs(date).year();
-    const month = dayjs(date).month();
     const normalizedDate = dayjs(date).format('YYYY-MM-DD');
 
     const transaction: InitialTransaction = {
@@ -26,8 +24,8 @@ export function useSubmitTransaction(reset: () => void) {
       ...rest,
     };
 
-    dispatch(addTransaction({ year, month, transaction }));
-    showTransactionAdded({ year, month, transaction });
+    dispatch(addTransaction({ transaction }));
+    showTransactionAdded({ transaction });
     reset();
   };
 }

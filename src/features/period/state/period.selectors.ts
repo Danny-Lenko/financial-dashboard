@@ -10,21 +10,31 @@ export const selectActiveYear = (state: RootState) => state.period.activeYear;
 
 export const selectActivePeriod = createSelector(
   [selectActiveYear, selectActiveMonth],
-  (year, month): PeriodWithType => ({
-    year,
-    month,
-    type: month === null ? 'year' : 'month',
-  })
+  (year, month): PeriodWithType =>
+    month === null
+      ? {
+          year,
+          month: null,
+          type: 'year',
+        }
+      : {
+          year,
+          month,
+          type: 'month',
+        }
 );
 
 export const selectPreviousPeriod = createSelector(
   [selectActivePeriod],
-  ({ year, month, type }): PeriodWithType => {
-    if (type === 'year') {
-      return { year: year - 1, month: null, type: 'year' };
+  (activePeriod): PeriodWithType => {
+    if (activePeriod.type === 'year') {
+      return { year: activePeriod.year - 1, month: null, type: 'year' };
     }
 
-    const { year: prevYear, month: prevMonth } = getPreviousMonth(year, month!);
+    const { year: prevYear, month: prevMonth } = getPreviousMonth(
+      activePeriod.year,
+      activePeriod.month
+    );
 
     return {
       year: prevYear,
@@ -36,18 +46,18 @@ export const selectPreviousPeriod = createSelector(
 
 export const selectStartingPeriod = createSelector(
   [selectInitialTransactions],
-  (monthlyData): Period => {
-    if (monthlyData.length === 0) {
+  (allTransactions): Period => {
+    if (allTransactions.length === 0) {
       const currentDate = new Date();
       return { year: currentDate.getFullYear(), month: currentDate.getMonth() };
     }
 
-    const sorted = [...monthlyData].sort((a, b) => {
-      if (a.year !== b.year) return a.year - b.year;
-      return a.month - b.month;
-    });
+    const oldestTransaction = allTransactions.reduce((oldest, transaction) =>
+      transaction.date < oldest.date ? transaction : oldest
+    );
 
-    const first = sorted[0];
-    return { year: first.year, month: first.month };
+    const startDate = new Date(oldestTransaction.date);
+
+    return { year: startDate.getFullYear(), month: startDate.getMonth() };
   }
 );

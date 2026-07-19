@@ -29,11 +29,11 @@ export const PeriodPicker = ({
   const activePeriod = useAppSelector(selectActivePeriod);
   const startingPeriod = useAppSelector(selectStartingPeriod);
 
-  const initialYear = !activePeriod.isYearly ? activePeriod.year : CURRENT_YEAR;
+  const initialYear = activePeriod.year;
   const [selectedYear, setSelectedYear] = useState(initialYear);
 
   useEffect(() => {
-    if (open && !activePeriod.isYearly) {
+    if (open) {
       setSelectedYear(activePeriod.year);
     }
   }, [open, activePeriod]);
@@ -44,15 +44,14 @@ export const PeriodPicker = ({
   };
 
   const isMonthDisabled = (monthIndex: number) => {
+    const startingMonth = startingPeriod.month ?? 0;
+
     // Disable future months
     if (selectedYear === CURRENT_YEAR && monthIndex > CURRENT_MONTH) {
       return true;
     }
     // Disable months before data start period
-    if (
-      selectedYear === startingPeriod.year &&
-      monthIndex < startingPeriod.month
-    ) {
+    if (selectedYear === startingPeriod.year && monthIndex < startingMonth) {
       return true;
     }
     // Disable all months if year is in the future
@@ -96,7 +95,7 @@ export const PeriodPicker = ({
         <MonthGrid>
           {MONTHS.map((month, index) => {
             const isSelected =
-              !activePeriod.isYearly &&
+              activePeriod.type === 'month' &&
               selectedYear === activePeriod.year &&
               index === activePeriod.month;
             const isDisabled = isMonthDisabled(index);
