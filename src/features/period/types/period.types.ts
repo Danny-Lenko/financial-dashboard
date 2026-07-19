@@ -1,7 +1,7 @@
 export type PeriodType = 'month' | 'year';
 
 export interface PeriodState {
-  activeMonth: number;
+  activeMonth: number | null;
   activeYear: number;
 }
 
@@ -10,9 +10,17 @@ export interface Period {
   year: number;
 }
 
-export interface PeriodWithType extends Period {
-  type: PeriodType;
-}
+export type PeriodWithType =
+  | {
+      month: number;
+      year: number;
+      type: 'month';
+    }
+  | {
+      month: null;
+      year: number;
+      type: 'year';
+    };
 
 export interface MonthYearPickerProps {
   open: boolean;

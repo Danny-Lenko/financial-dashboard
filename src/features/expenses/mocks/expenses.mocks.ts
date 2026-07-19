@@ -1,6 +1,17 @@
-import type { ExpensesByPeriodData } from '@/features/expenses/types/expenses.types';
+import type { ExpenseCategory } from '@/features/expenses/types/expenses.types';
 
-export const thisMonthExpensesMock: ExpensesByPeriodData = {
+interface ExpensesByPeriodMock {
+  total: number;
+  period: string;
+  categories: {
+    id: string;
+    name: ExpenseCategory;
+    amount: number;
+    percentage: number;
+  }[];
+}
+
+export const thisMonthExpensesMock: ExpensesByPeriodMock = {
   total: 3945.55,
   period: 'March 2024',
   categories: [

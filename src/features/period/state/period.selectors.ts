@@ -10,21 +10,31 @@ export const selectActiveYear = (state: RootState) => state.period.activeYear;
 
 export const selectActivePeriod = createSelector(
   [selectActiveYear, selectActiveMonth],
-  (year, month): PeriodWithType => ({
-    year,
-    month,
-    type: month === null ? 'year' : 'month',
-  })
+  (year, month): PeriodWithType =>
+    month === null
+      ? {
+          year,
+          month: null,
+          type: 'year',
+        }
+      : {
+          year,
+          month,
+          type: 'month',
+        }
 );
 
 export const selectPreviousPeriod = createSelector(
   [selectActivePeriod],
-  ({ year, month, type }): PeriodWithType => {
-    if (type === 'year') {
-      return { year: year - 1, month: null, type: 'year' };
+  (activePeriod): PeriodWithType => {
+    if (activePeriod.type === 'year') {
+      return { year: activePeriod.year - 1, month: null, type: 'year' };
     }
 
-    const { year: prevYear, month: prevMonth } = getPreviousMonth(year, month!);
+    const { year: prevYear, month: prevMonth } = getPreviousMonth(
+      activePeriod.year,
+      activePeriod.month
+    );
 
     return {
       year: prevYear,

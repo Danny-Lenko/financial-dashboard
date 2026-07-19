@@ -1,24 +1,15 @@
-import {
-  createEntityAdapter,
-  createSlice,
-  type PayloadAction,
-} from '@reduxjs/toolkit';
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
 import type {
   AddTransactionPayload,
   DataState,
   InitialMonthlyBudget,
-  InitialTransaction,
   RemoveTransactionPayload,
   UpdateTransactionPayload,
 } from '../types/initialData.types';
 
+import { transactionsAdapter } from './data.adapter';
 import initialTransactions from '../mocks/initial-transactions.json';
-
-const transactionsAdapter = createEntityAdapter<InitialTransaction, string>({
-  selectId: (transaction) => transaction.id,
-  sortComparer: (a, b) => b.date.localeCompare(a.date),
-});
 
 const normalizeTransactions = (monthlyData: InitialMonthlyBudget[]) =>
   monthlyData.flatMap((monthlyBudget) => monthlyBudget.transactions);

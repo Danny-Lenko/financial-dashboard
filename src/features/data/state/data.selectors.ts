@@ -1,8 +1,5 @@
-import { createEntityAdapter } from '@reduxjs/toolkit';
 import type { RootState } from '@/store/store';
-import type { InitialTransaction } from '../types/initialData.types';
-
-const transactionsAdapter = createEntityAdapter<InitialTransaction, string>();
+import { transactionsAdapter } from './data.adapter';
 
 export const selectDataState = (state: RootState) => state.data;
 

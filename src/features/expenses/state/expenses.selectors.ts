@@ -31,7 +31,7 @@ export const selectAllMonthsExpenses = createSelector(
 
 export const selectActivePeriodExpenses = createSelector(
   [selectAllMonthsExpenses, selectActivePeriod],
-  (allExpenses, { year, month, type }): MonthExpenses => {
-    return getPeriodExpenses(allExpenses, { year, month, type });
+  (allExpenses, activePeriod): MonthExpenses => {
+    return getPeriodExpenses(allExpenses, activePeriod);
   }
 );

@@ -10,11 +10,12 @@ const LAST_TRANSACTIONS_LIMIT = 7;
 
 export const selectActivePeriodLastTransactions = createSelector(
   [selectInitialTransactions, selectActivePeriod],
-  (allTransactions, { year, month, type }): InitialTransaction[] => {
-    if (type === 'year') {
+  (allTransactions, activePeriod): InitialTransaction[] => {
+    if (activePeriod.type === 'year') {
       return allTransactions
         .filter(
-          (transaction) => new Date(transaction.date).getFullYear() === year
+          (transaction) =>
+            new Date(transaction.date).getFullYear() === activePeriod.year
         )
         .slice(0, LAST_TRANSACTIONS_LIMIT);
     }
@@ -23,8 +24,8 @@ export const selectActivePeriodLastTransactions = createSelector(
       .filter((transaction) => {
         const transactionDate = new Date(transaction.date);
         return (
-          transactionDate.getFullYear() === year &&
-          transactionDate.getMonth() === month
+          transactionDate.getFullYear() === activePeriod.year &&
+          transactionDate.getMonth() === activePeriod.month
         );
       })
       .slice(0, LAST_TRANSACTIONS_LIMIT);
